@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Syne", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-purple: #6B3FD4;
+  --color-purple2: #A855F7;
+  --color-blue: #3B82F6;
+  --color-cyan: #06B6D4;
+  --color-pink: #EC4899;
+  --color-dark: #0D0B1A;
+  --color-dark2: #13102A;
+  --color-dark3: #1C1740;
+  --color-mid: #8B7FC0;
+  
+  --color-background: var(--color-dark);
+  --color-foreground: #FFFFFF;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-dark);
+  color: var(--color-foreground);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #A855F7 0%, #06B6D4 50%, #EC4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 0 60px rgba(107, 63, 212, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* Background Animations */
+@keyframes swirl {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes trailMove {
+  0% { transform: translateX(-100%) rotate(var(--trail-rotate, 0deg)); opacity: 0; }
+  50% { opacity: 0.3; }
+  100% { transform: translateX(200%) rotate(var(--trail-rotate, 0deg)); opacity: 0; }
+}
+
+.animate-swirl {
+  animation: swirl 25s infinite linear;
+}
+
+.animate-trail {
+  animation: trailMove 10s infinite linear;
+}
+
