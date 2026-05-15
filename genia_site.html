@@ -54,7 +54,6 @@
             background: var(--bg);
             color: var(--text-dim);
             overflow-x: hidden;
-            cursor: none;
             font-size: 15px;
             line-height: 1.6;
         }
@@ -1367,6 +1366,31 @@
             color: var(--v2);
         }
 
+        .seat-strip {
+            margin-top: 18px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .seat-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 15px;
+            border: 1px solid rgba(139, 92, 246, .26);
+            border-radius: 100px;
+            background: rgba(139, 92, 246, .09);
+            color: var(--text-dim);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .seat-pill strong {
+            color: #fff;
+        }
+
         /* Social proof */
         #proof {
             background: rgba(14, 13, 30, .85);
@@ -1735,6 +1759,101 @@
             box-shadow: 0 0 44px rgba(139, 92, 246, .55);
         }
 
+        .final-note {
+            background: rgba(245, 158, 11, .1);
+            border: 1px solid rgba(245, 158, 11, .28);
+            border-radius: 14px;
+            color: #fde68a;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.5;
+            margin: 14px 0 16px;
+            padding: 13px 14px;
+        }
+
+        .admin-track {
+            margin-top: 18px;
+            border-top: 1px solid var(--line);
+            padding-top: 16px;
+            text-align: left;
+        }
+
+        .admin-track summary {
+            cursor: pointer;
+            color: var(--v3);
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+        }
+
+        .admin-box {
+            margin-top: 12px;
+            background: var(--txt3);
+            border: 1px solid rgba(139, 92, 246, .18);
+            border-radius: 14px;
+            padding: 14px;
+        }
+
+        .admin-stat {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            color: var(--text-dim);
+            font-size: 13px;
+            padding: 7px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        .admin-stat:last-child {
+            border-bottom: none;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .admin-mini {
+            border: 1px solid rgba(139, 92, 246, .28);
+            background: rgba(139, 92, 246, .12);
+            color: #fff;
+            border-radius: 100px;
+            cursor: pointer;
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .04em;
+            padding: 8px 12px;
+            text-transform: uppercase;
+        }
+
+        .whatsapp-float {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            z-index: 650;
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 13px 17px;
+            border-radius: 100px;
+            background: #10b981;
+            color: #04130d;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 900;
+            box-shadow: 0 16px 38px rgba(16, 185, 129, .36);
+            transition: transform .15s, box-shadow .2s;
+        }
+
+        .whatsapp-float:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 48px rgba(16, 185, 129, .5);
+        }
+
         /* Contact */
         #contact {
             background: rgba(14, 13, 30, .85);
@@ -1999,6 +2118,32 @@
             transition-delay: .2s;
         }
 
+        @media (pointer: fine) {
+            body {
+                cursor: none;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: .01ms !important;
+            }
+
+            body {
+                cursor: auto;
+            }
+
+            #cur-dot,
+            #cur-ring {
+                display: none;
+            }
+        }
+
         @media(max-width:980px) {
             .menu-toggle {
                 display: flex;
@@ -2117,6 +2262,13 @@
                 grid-template-columns: 1fr;
             }
 
+            .whatsapp-float {
+                right: 14px;
+                bottom: 14px;
+                padding: 12px 14px;
+                font-size: 13px;
+            }
+
             footer {
                 flex-direction: column;
                 text-align: center;
@@ -2130,9 +2282,13 @@
     <div id="cur-dot"></div>
     <div id="cur-ring"></div>
     <div id="progress-bar"></div>
+    <a class="whatsapp-float" href="https://wa.me/2290159037159?text=Bonjour%2C%20je%20souhaite%20avoir%20des%20informations%20sur%20GenIA%202026."
+        target="_blank" rel="noopener noreferrer" aria-label="Contacter GenIA sur WhatsApp">
+        <i data-lucide="message-circle" style="width:18px;height:18px"></i>WhatsApp
+    </a>
 
     <nav id="nav">
-        <a href="#" class="nav-logo"><span class="nav-pip"></span>GenIA</a>
+        <a href="#hero" class="nav-logo"><span class="nav-pip"></span>GenIA</a>
         <div class="nav-links" id="nav-links">
             <a href="#programme">Programme</a>
             <a href="#projets">Projets</a>
@@ -2442,12 +2598,16 @@
             <div class="rv" style="text-align:center">
                 <div class="ey" style="justify-content:center">Infos pratiques</div>
                 <h2 class="sh" style="text-align:center">Tout ce que vous<br>devez savoir</h2>
+                <div class="seat-strip">
+                    <div class="seat-pill"><i data-lucide="users" style="width:15px;height:15px"></i><strong>12 places</strong> disponibles</div>
+                    <div class="seat-pill"><i data-lucide="calendar-days" style="width:15px;height:15px"></i>Groupe de juillet 2026</div>
+                </div>
             </div>
             <div class="igrid rv">
                 <div class="icell">
                     <div class="icell-ico"><i data-lucide="calendar" style="width:22px;height:22px"></i></div>
                     <div class="icell-l">Dates</div>
-                    <div class="icell-v">29 Juin – 24 Juillet 2025</div>
+                    <div class="icell-v">29 Juin – 24 Juillet 2026</div>
                 </div>
                 <div class="icell">
                     <div class="icell-ico"><i data-lucide="map-pin" style="width:22px;height:22px"></i></div>
@@ -2541,7 +2701,7 @@
                             <div class="pc1"><span class="pc-brand">GenIA</span>
                                 <div class="pc-chip"></div>
                             </div>
-                            <div class="pc-num">···· ···· ···· 2025</div>
+                            <div class="pc-num">···· ···· ···· 2026</div>
                             <div class="pc2"><span class="pc-holder">Inscription</span>
                                 <div class="pc-bads"><span class="pc-bad">MTN</span><span class="pc-bad">Moov</span>
                                 </div>
@@ -2565,20 +2725,30 @@
                             <div class="ps2">Immeuble vitré — rue clinique CELESTATH</div>
                         </div>
                     </div>
+                    <div class="pblock" style="border-color:rgba(16,185,129,.28);background:rgba(16,185,129,.06)">
+                        <div class="pbi" style="background:rgba(16,185,129,.14);color:var(--g)"><i data-lucide="users"
+                                style="width:18px;height:18px"></i></div>
+                        <div>
+                            <div class="pl">Places restantes</div>
+                            <div class="pv">12 places disponibles</div>
+                            <div class="ps2">Groupe de juillet 2026 · petits groupes</div>
+                        </div>
+                    </div>
                 </div>
                 <div class="pform">
                     <div id="payForm">
                         <div class="pf-h">Inscription (5 000 F)</div>
                         <div class="pf-s">Remplissez ce formulaire puis envoyez la capture WhatsApp</div>
                         <div class="frow">
-                            <div class="fi"><label>Prénom *</label><input type="text" id="ins_prenom"
-                                    placeholder="Kofi"></div>
-                            <div class="fi"><label>Nom *</label><input type="text" id="ins_nom" placeholder="Ahode">
+                            <div class="fi"><label for="ins_prenom">Prénom *</label><input type="text" id="ins_prenom"
+                                    placeholder="Kofi" autocomplete="given-name" required></div>
+                            <div class="fi"><label for="ins_nom">Nom *</label><input type="text" id="ins_nom" placeholder="Ahode"
+                                    autocomplete="family-name" required>
                             </div>
                         </div>
-                        <div class="fi"><label>Téléphone / WhatsApp *</label><input type="tel" id="ins_tel"
-                                placeholder="+229 XX XX XX XX"></div>
-                        <div class="fi"><label>Âge *</label><select id="ins_age">
+                        <div class="fi"><label for="ins_tel">Téléphone / WhatsApp *</label><input type="tel" id="ins_tel"
+                                placeholder="+229 XX XX XX XX" autocomplete="tel" required></div>
+                        <div class="fi"><label for="ins_age">Âge *</label><select id="ins_age" required>
                                 <option value="">Choisir…</option>
                                 <option>11</option>
                                 <option>12</option>
@@ -2586,8 +2756,8 @@
                                 <option>14</option>
                                 <option>15+</option>
                             </select></div>
-                        <div class="fi"><label>Option de paiement *</label><select id="ins_paiement"
-                                onchange="updatePaySteps()">
+                        <div class="fi"><label for="ins_paiement">Option de paiement *</label><select id="ins_paiement"
+                                onchange="updatePaySteps()" required>
                                 <option value="5000">Inscription seule (5 000 F)</option>
                                 <option value="30000">Formation complète (30 000 F)</option>
                             </select></div>
@@ -2619,16 +2789,30 @@
                             Demande envoyée !</div>
                         <p style="font-size:13px;color:var(--text-dim);margin-bottom:12px">Votre code de suivi : <strong
                                 id="suiviCode" style="color:var(--v2);font-family:'DM Mono',monospace;"></strong></p>
+                        <div class="final-note">Votre inscription n'est pas encore finalisée. Envoyez maintenant le
+                            message WhatsApp avec la capture de paiement.</div>
                         <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px">Pour finaliser, <strong>envoyez
                                 la capture d'écran de votre paiement</strong> sur WhatsApp au <strong>+229 01 59 03 71
                                 59</strong> avec ce code dans le message.</p>
-                        <a id="waLink" href="#" target="_blank" class="btn-main"
+                        <a id="waLink" href="#" target="_blank" rel="noopener noreferrer" class="btn-main"
                             style="margin-bottom:12px;display:inline-flex;justify-content:center;"><i
                                 data-lucide="message-circle" style="width:16px;height:16px"></i> Envoyer la capture
                             WhatsApp</a>
                         <p style="font-size:11px;color:var(--text-mid);">Après vérification, vous recevrez votre pass
                             définitif par WhatsApp.</p>
                     </div>
+                    <details class="admin-track">
+                        <summary>Suivi local des inscriptions</summary>
+                        <div class="admin-box">
+                            <div class="admin-stat"><span>Demandes enregistrées ici</span><strong id="adminCount">0</strong></div>
+                            <div class="admin-stat"><span>Dernier code</span><strong id="adminLastCode">Aucun</strong></div>
+                            <div class="admin-stat"><span>Dernière demande</span><strong id="adminLastDate">Aucune</strong></div>
+                            <div class="admin-actions">
+                                <button type="button" class="admin-mini" onclick="exportAdminCsv()">Exporter CSV</button>
+                                <button type="button" class="admin-mini" onclick="clearAdminTrack()">Vider</button>
+                            </div>
+                        </div>
+                    </details>
                 </div>
             </div>
         </div>
@@ -2663,7 +2847,7 @@
                         <div>
                             <div class="cl">Rythme</div>
                             <div class="cv">Lun · Mer · Ven · 3h/session</div>
-                            <div class="cs">29 Juin – 24 Juillet 2025</div>
+                            <div class="cs">29 Juin – 24 Juillet 2026</div>
                         </div>
                     </div>
                     <div class="cbl" style="border-color:rgba(139,92,246,.28);background:rgba(139,92,246,.05)">
@@ -2681,11 +2865,13 @@
                         <div class="cf-h">Demande de renseignements</div>
                         <div class="cf-s">On vous recontacte sous 48h</div>
                         <div class="frow">
-                            <div class="fi"><label>Prénom *</label><input type="text" id="prenom" placeholder="Kofi">
+                            <div class="fi"><label for="prenom">Prénom *</label><input type="text" id="prenom" placeholder="Kofi"
+                                    autocomplete="given-name" required>
                             </div>
-                            <div class="fi"><label>Nom *</label><input type="text" id="nom" placeholder="Ahode"></div>
+                            <div class="fi"><label for="nom">Nom *</label><input type="text" id="nom" placeholder="Ahode"
+                                    autocomplete="family-name" required></div>
                         </div>
-                        <div class="fi"><label>Âge *</label><select id="age">
+                        <div class="fi"><label for="age">Âge *</label><select id="age" required>
                                 <option value="">Choisir…</option>
                                 <option>11</option>
                                 <option>12</option>
@@ -2693,9 +2879,9 @@
                                 <option>14</option>
                                 <option>15+</option>
                             </select></div>
-                        <div class="fi"><label>Téléphone / WhatsApp *</label><input type="tel" id="tel"
-                                placeholder="+229 XX XX XX XX"></div>
-                        <div class="fi"><label>Message</label><textarea id="msg"
+                        <div class="fi"><label for="tel">Téléphone / WhatsApp *</label><input type="tel" id="tel"
+                                placeholder="+229 XX XX XX XX" autocomplete="tel" required></div>
+                        <div class="fi"><label for="msg">Message</label><textarea id="msg"
                                 placeholder="Votre question ou message (optionnel)"></textarea></div>
                         <button class="fsbtn" onclick="sendForm()">Envoyer la demande →</button>
                     </div>
@@ -2744,7 +2930,7 @@
         </div>
         <div class="flinks"><a href="#programme">Programme</a><a href="#projets">Projets</a><a
                 href="#pay">Paiement</a><a href="#contact">Contact</a></div>
-        <div class="fc">+229 01 59 03 71 59 · © 2025 GenIA — Yénawa, Bénin</div>
+        <div class="fc">+229 01 59 03 71 59 · © 2026 GenIA — Yénawa, Bénin</div>
     </footer>
 
     <script>
@@ -2767,6 +2953,7 @@
                 my = 0,
                 rx = 0,
                 ry = 0;
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             document.addEventListener('mousemove', e => {
                 mx = e.clientX;
                 my = e.clientY;
@@ -2774,6 +2961,7 @@
                 dot.style.top = my + 'px';
             });
             (function frame() {
+                if (reduceMotion) return;
                 rx += (mx - rx) * .15;
                 ry += (my - ry) * .15;
                 ring.style.left = rx + 'px';
@@ -2824,14 +3012,71 @@
             document.querySelectorAll('.rv').forEach(el => obs.observe(el));
             document.querySelectorAll('a[href^="#"]').forEach(a => {
                 a.addEventListener('click', e => {
-                    const t =
-                        document.querySelector(a.getAttribute('href')); if (t) {
+                    const href = a.getAttribute('href');
+                    if (!href || href === '#' || !href.startsWith('#')) return;
+                    const t = document.querySelector(href); if (t) {
                             e.preventDefault();
-                            t.scrollIntoView({ behavior: 'smooth' });
-                        }
+                            t.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
+                    }
                 });
             });
+            updateAdminTrack();
         });
+
+        const ADMIN_TRACK_KEY = 'genia_inscriptions_2026';
+
+        function getAdminTrack() {
+            try {
+                return JSON.parse(localStorage.getItem(ADMIN_TRACK_KEY) || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function setAdminTrack(items) {
+            try {
+                localStorage.setItem(ADMIN_TRACK_KEY, JSON.stringify(items));
+            } catch (e) { }
+        }
+
+        function saveAdminEntry(entry) {
+            const items = getAdminTrack();
+            items.unshift(entry);
+            setAdminTrack(items);
+            updateAdminTrack();
+        }
+
+        function updateAdminTrack() {
+            const items = getAdminTrack();
+            const count = document.getElementById('adminCount');
+            const lastCode = document.getElementById('adminLastCode');
+            const lastDate = document.getElementById('adminLastDate');
+            if (!count || !lastCode || !lastDate) return;
+            const latest = items[0];
+            count.textContent = items.length;
+            lastCode.textContent = latest ? latest.suivi : 'Aucun';
+            lastDate.textContent = latest ? new Date(latest.createdAt).toLocaleString('fr-FR') : 'Aucune';
+        }
+
+        function exportAdminCsv() {
+            const items = getAdminTrack();
+            if (!items.length) { alert('Aucune inscription enregistrée sur ce navigateur.'); return; }
+            const headers = ['date', 'code', 'prenom', 'nom', 'telephone', 'age', 'paiement'];
+            const rows = items.map(item => headers.map(key => `"${String(item[key] || '').replace(/"/g, '""')}"`).join(','));
+            const blob = new Blob([[headers.join(','), ...rows].join('\n')], { type: 'text/csv;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'genia-inscriptions-2026.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function clearAdminTrack() {
+            if (!confirm('Vider le suivi local des inscriptions sur ce navigateur ?')) return;
+            setAdminTrack([]);
+            updateAdminTrack();
+        }
 
         function genSuivi() {
             const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let code = 'GEN-'; for (let i = 0; i < 4; i++)
@@ -2862,6 +3107,16 @@
             if (!prenom || !nom || !tel || !age) { alert('Veuillez remplir tous les champs.'); return; }
             const suivi = genSuivi();
             document.getElementById('suiviCode').textContent = suivi;
+            saveAdminEntry({
+                createdAt: new Date().toISOString(),
+                date: new Date().toLocaleString('fr-FR'),
+                suivi,
+                prenom,
+                nom,
+                telephone: tel,
+                age,
+                paiement: typePaiement
+            });
 
             let msg = `Bonjour, je confirme mon inscription GenIA.\n\nPrénom : ${prenom}\nNom : ${nom}\nTéléphone : ${tel}\nÂge : ${age}\nOption : ${typePaiement}\nCode de suivi : ${suivi}\n\nVeuillez trouver la capture de paiement ci-jointe.`;
             if (paiement === '5000') {
@@ -2906,14 +3161,16 @@
             const fullMsg = `Bonjour, je souhaite avoir des renseignements sur GenIA.\n\nPrénom : ${p}\nNom : ${n}\nÂge : ${a}\nTéléphone : ${t}\nMessage : ${m || 'Pas de message supplémentaire.'}`;
             const waUrl = `https://wa.me/2290159037159?text=${encodeURIComponent(fullMsg)}`;
 
-            // Tentative d'envoi Formspree en tâche de fond (optionnel)
-            try {
-                fetch('https://formspree.io/f/TON_ID_FORMSPREE', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prenom: p, nom: n, telephone: t, age: a, message: m })
-                });
-            } catch (e) { }
+            const formspreeEndpoint = '';
+            if (formspreeEndpoint) {
+                try {
+                    fetch(formspreeEndpoint, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ prenom: p, nom: n, telephone: t, age: a, message: m })
+                    });
+                } catch (e) { }
+            }
 
             window.open(waUrl, '_blank');
 

@@ -35,6 +35,16 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen bg-dark">
+      <a
+        href="https://wa.me/2290159037159?text=Bonjour%2C%20je%20souhaite%20avoir%20des%20informations%20sur%20GenIA%202026."
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Contacter GenIA sur WhatsApp"
+        className="fixed bottom-5 right-5 z-[120] rounded-full bg-emerald-500 px-5 py-3 text-sm font-black text-emerald-950 shadow-2xl shadow-emerald-500/30 transition-all hover:-translate-y-0.5 hover:shadow-emerald-500/50"
+      >
+        WhatsApp
+      </a>
+
       {/* Navigation */}
       <nav className={`fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-6 py-4 md:px-12 transition-all duration-400 ${activeNav ? "bg-dark/90 backdrop-blur-2xl border-b border-purple2/20 py-3" : "bg-transparent"}`}>
         <div className="font-display text-2xl font-black bg-gradient-to-br from-purple2 to-cyan bg-clip-text text-transparent flex items-center gap-2">
@@ -247,6 +257,14 @@ export default function Home() {
         
         <div className="grid lg:grid-cols-[1fr_1.1fr] gap-12 items-start">
           <div className="space-y-4 reveal">
+            <div className="flex items-center gap-5 rounded-[20px] border border-emerald-400/30 bg-emerald-400/10 p-6 shadow-lg shadow-emerald-500/5">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-emerald-400/20 text-2xl">👥</div>
+              <div>
+                <div className="mb-1 text-[11px] font-bold uppercase tracking-widest text-mid">Places restantes</div>
+                <div className="font-display text-base font-bold text-white">12 places disponibles</div>
+                <div className="mt-0.5 text-[12px] font-bold text-emerald-300">Groupe de juillet 2026 · petits groupes</div>
+              </div>
+            </div>
             {[
               { ico: "📞", lbl: "WhatsApp", val: "(+229) 01 59 03 71 59" },
               { ico: "📍", lbl: "Lieu", val: "Yénawa, Auditorium de la Cité des Jeunes", sub: "Immeuble vitré, rue clinique 'CELESTATH'" },

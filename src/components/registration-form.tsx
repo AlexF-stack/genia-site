@@ -1,9 +1,39 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
+const ADMIN_TRACK_KEY = "genia_inscriptions_2026";
+
+type AdminEntry = {
+  createdAt: string;
+  date: string;
+  suivi: string;
+  prenom: string;
+  nom: string;
+  telephone: string;
+  age: string;
+};
+
+function genSuivi() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "GEN-";
+  for (let i = 0; i < 4; i += 1) code += chars[Math.floor(Math.random() * chars.length)];
+  return code;
+}
+
+function getAdminTrack(): AdminEntry[] {
+  if (typeof window === "undefined") return [];
+  try {
+    return JSON.parse(localStorage.getItem(ADMIN_TRACK_KEY) || "[]") as AdminEntry[];
+  } catch {
+    return [];
+  }
+}
 
 export function RegistrationForm() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [suiviCode, setSuiviCode] = useState("");
+  const [adminEntries, setAdminEntries] = useState<AdminEntry[]>([]);
   const [formData, setFormData] = useState({
     prenom: "",
     nom: "",
@@ -14,6 +44,44 @@ export function RegistrationForm() {
     message: "",
   });
 
+  useEffect(() => {
+    setAdminEntries(getAdminTrack());
+  }, []);
+
+  const saveAdminEntry = (entry: AdminEntry) => {
+    const nextEntries = [entry, ...getAdminTrack()];
+    localStorage.setItem(ADMIN_TRACK_KEY, JSON.stringify(nextEntries));
+    setAdminEntries(nextEntries);
+  };
+
+  const exportAdminCsv = () => {
+    const entries = getAdminTrack();
+    if (!entries.length) {
+      alert("Aucune inscription enregistrée sur ce navigateur.");
+      return;
+    }
+
+    const headers = ["date", "code", "prenom", "nom", "telephone", "age"];
+    const rows = entries.map((entry) =>
+      [entry.date, entry.suivi, entry.prenom, entry.nom, entry.telephone, entry.age]
+        .map((value) => `"${String(value).replace(/"/g, '""')}"`)
+        .join(",")
+    );
+    const blob = new Blob([[headers.join(","), ...rows].join("\n")], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "genia-inscriptions-2026.csv";
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const clearAdminTrack = () => {
+    if (!confirm("Vider le suivi local des inscriptions sur ce navigateur ?")) return;
+    localStorage.setItem(ADMIN_TRACK_KEY, "[]");
+    setAdminEntries([]);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.prenom || !formData.nom || !formData.age || !formData.phone) {
@@ -22,6 +90,7 @@ export function RegistrationForm() {
     }
 
     setStatus("loading");
+    const suivi = genSuivi();
 
     try {
       const response = await fetch("/api/register", {
@@ -33,12 +102,23 @@ export function RegistrationForm() {
           profile: `Âge: ${formData.age}, Collège: ${formData.college}`,
           goal: formData.niveau,
           message: formData.message,
+          trackingCode: suivi,
         }),
       });
 
       const data = await response.json();
 
       if (data.ok) {
+        setSuiviCode(suivi);
+        saveAdminEntry({
+          createdAt: new Date().toISOString(),
+          date: new Date().toLocaleString("fr-FR"),
+          suivi,
+          prenom: formData.prenom,
+          nom: formData.nom,
+          telephone: formData.phone,
+          age: formData.age,
+        });
         setStatus("success");
         if (data.mode === "whatsapp" && data.whatsappUrl) {
           window.open(data.whatsappUrl, "_blank");
@@ -56,7 +136,11 @@ export function RegistrationForm() {
       <div className="bg-white/4 border border-purple2/20 rounded-[24px] p-9 text-center animate-[fadeUp_0.6s_ease_both]">
         <div className="text-6xl mb-4">🎉</div>
         <h3 className="font-display text-2xl font-extrabold text-purple2 mb-3">Demande envoyée !</h3>
+        <p className="mb-4 rounded-2xl border border-amber-300/30 bg-amber-300/10 p-4 text-sm font-bold leading-relaxed text-amber-200">
+          Votre inscription n'est pas encore finalisée. Envoyez maintenant le message WhatsApp avec la capture de paiement.
+        </p>
         <p className="text-white/50 leading-relaxed">
+          Code de suivi : <strong className="text-purple2">{suiviCode}</strong><br /><br />
           Merci ! Nous allons te recontacter sur WhatsApp sous 48h pour confirmer ta place.<br /><br />
           <strong className="text-purple2">Ou appelle-nous directement :<br />(+229) 01 59 03 71 59</strong>
         </p>
@@ -69,6 +153,8 @@ export function RegistrationForm() {
       </div>
     );
   }
+
+  const latestEntry = adminEntries[0];
 
   return (
     <div className="bg-white/4 border border-purple2/20 rounded-[24px] p-9 shadow-2xl shadow-purple/15 relative overflow-hidden group">
@@ -183,6 +269,34 @@ export function RegistrationForm() {
           📞 Tu peux aussi nous appeler directement au (+229) 01 59 03 71 59
         </p>
       </form>
+
+      <details className="mt-6 border-t border-white/10 pt-5 text-left">
+        <summary className="cursor-pointer text-[11px] font-bold uppercase tracking-widest text-purple2">
+          Suivi local des inscriptions
+        </summary>
+        <div className="mt-4 rounded-2xl border border-purple2/20 bg-white/5 p-4">
+          <div className="flex justify-between gap-4 border-b border-white/10 py-2 text-sm text-white/60">
+            <span>Demandes enregistrées ici</span>
+            <strong className="text-white">{adminEntries.length}</strong>
+          </div>
+          <div className="flex justify-between gap-4 border-b border-white/10 py-2 text-sm text-white/60">
+            <span>Dernier code</span>
+            <strong className="text-white">{latestEntry?.suivi ?? "Aucun"}</strong>
+          </div>
+          <div className="flex justify-between gap-4 py-2 text-sm text-white/60">
+            <span>Dernière demande</span>
+            <strong className="text-white">{latestEntry?.date ?? "Aucune"}</strong>
+          </div>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <button type="button" onClick={exportAdminCsv} className="rounded-full border border-purple2/30 bg-purple2/15 px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-white">
+              Exporter CSV
+            </button>
+            <button type="button" onClick={clearAdminTrack} className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-white/70">
+              Vider
+            </button>
+          </div>
+        </div>
+      </details>
     </div>
   );
 }

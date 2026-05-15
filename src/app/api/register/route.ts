@@ -8,6 +8,7 @@ type RegistrationPayload = {
   profile?: string;
   goal?: string;
   message?: string;
+  trackingCode?: string;
 };
 
 const whatsappNumber = process.env.GENIA_WHATSAPP_NUMBER ?? "2290159037159";
@@ -22,6 +23,7 @@ function buildWhatsappUrl(payload: RegistrationPayload) {
     `Email: ${payload.email ?? "-"}`,
     `Profil: ${payload.profile ?? "-"}`,
     `Objectif: ${payload.goal ?? "-"}`,
+    `Code de suivi: ${payload.trackingCode ?? "-"}`,
     `Message: ${payload.message ?? "-"}`,
   ];
 
@@ -69,6 +71,7 @@ export async function POST(request: Request) {
           <p><strong>Email :</strong> ${payload.email}</p>
           <p><strong>Profil :</strong> ${payload.profile}</p>
           <p><strong>Objectif :</strong> ${payload.goal}</p>
+          <p><strong>Code de suivi :</strong> ${payload.trackingCode}</p>
           <p><strong>Message :</strong> ${payload.message}</p>
         `,
       });
@@ -87,4 +90,3 @@ export async function POST(request: Request) {
       : "Votre demande est prête. Finalisez l'envoi sur WhatsApp.",
   });
 }
-
