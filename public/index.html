@@ -1,0 +1,3211 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GenIA — Former les bâtisseurs de l'IA au Bénin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js">
+    </script>
+    <style>
+        :root {
+            --bg: #05040C;
+            --purple: #6B3FD4;
+            --purple2: #A855F7;
+            --cyan: #06B6D4;
+            --line: rgba(255, 255, 255, .12);
+            --line2: rgba(139, 92, 246, .25);
+            --text-main: #FFFFFF;
+            --text-dim: #D1D5DB;
+            --text-mid: #9CA3AF;
+            --v: #8b5cf6;
+            --v1: #7c3aed;
+            --v2: #a78bfa;
+            --v3: #c4b5fd;
+            --c: #06b6d4;
+            --c2: #22d3ee;
+            --g: #10b981;
+            --a: #f59e0b;
+            --pk: #f43f5e;
+            --txt: #ccc8e0;
+            --txt2: #6b6882;
+            --txt3: #353250;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text-dim);
+            overflow-x: hidden;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9996;
+            opacity: .032;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+            background-size: 256px;
+        }
+
+        /* Curseur Premium 3D Flèche */
+        #cur-dot {
+            position: fixed;
+            z-index: 10000;
+            pointer-events: none;
+            width: 22px;
+            height: 22px;
+            background: linear-gradient(135deg, #fff 0%, #a78bfa 50%, #7c3aed 100%);
+            transform: translate(-5%, -5%) rotate(-15deg);
+            clip-path: polygon(0% 0%, 0% 100%, 25% 75%, 45% 100%, 65% 100%, 45% 75%, 100% 75%);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+            transition: transform .15s, opacity .2s;
+        }
+
+        #cur-ring {
+            position: fixed;
+            z-index: 9999;
+            pointer-events: none;
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            border: 1px solid rgba(167, 139, 250, 0.3);
+            background: rgba(139, 92, 246, 0.03);
+            transform: translate(-50%, -50%);
+            backdrop-filter: blur(1px);
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.1), inset 0 0 10px rgba(139, 92, 246, 0.05);
+            transition: width .4s cubic-bezier(0.19, 1, 0.22, 1), height .4s cubic-bezier(0.19, 1, 0.22, 1), border-color .3s, background .3s, box-shadow .3s;
+        }
+
+        #cur-ring.hov {
+            width: 82px;
+            height: 82px;
+            background: rgba(139, 92, 246, 0.12);
+            border-color: rgba(167, 139, 250, 0.6);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.25), inset 0 0 15px rgba(139, 92, 246, 0.1);
+        }
+
+        .cur-ripple {
+            position: fixed;
+            z-index: 10001;
+            pointer-events: none;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(167, 139, 250, 0.4);
+            transform: translate(-50%, -50%);
+            animation: ripple .6s ease-out forwards;
+        }
+
+        @keyframes ripple {
+            to {
+                width: 150px;
+                height: 150px;
+                opacity: 0;
+            }
+        }
+
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 600;
+            height: 2px;
+            width: 0%;
+            background: linear-gradient(90deg, var(--v1), var(--c));
+            transition: width .1s linear;
+            box-shadow: 0 0 8px rgba(139, 92, 246, .6);
+        }
+
+        /* Nav */
+        nav {
+            position: fixed;
+            top: 2px;
+            left: 0;
+            right: 0;
+            z-index: 500;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 52px;
+            background: rgba(5, 4, 12, .65);
+            backdrop-filter: blur(32px) saturate(200%);
+            border-bottom: 1px solid var(--line);
+            transition: all .4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        nav.scrolled {
+            height: 52px;
+            background: rgba(5, 4, 12, .92);
+        }
+
+        .nav-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 24px;
+            letter-spacing: 2.5px;
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 900;
+        }
+
+        .nav-pip {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--v);
+            box-shadow: 0 0 10px var(--v);
+            animation: pip 2.5s ease-in-out infinite;
+        }
+
+        @keyframes pip {
+
+            0%,
+            100% {
+                box-shadow: 0 0 6px var(--v);
+            }
+
+            50% {
+                box-shadow: 0 0 18px var(--v), 0 0 36px rgba(139, 92, 246, .35);
+            }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            font-family: 'DM Mono', monospace;
+            font-size: 10.5px;
+            letter-spacing: .09em;
+            text-transform: uppercase;
+            color: var(--text-mid);
+            text-decoration: none;
+            transition: color .2s;
+            position: relative;
+            padding-bottom: 2px;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--v2);
+            transition: transform .25s cubic-bezier(.16, 1, .3, 1);
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .nav-links a:hover::after {
+            transform: translateX(-50%) scaleX(1);
+        }
+
+        .nav-pill {
+            font-family: 'Outfit', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            background: var(--v1);
+            color: #fff;
+            padding: 9px 22px;
+            border-radius: 100px;
+            text-decoration: none;
+            white-space: nowrap;
+            box-shadow: 0 0 22px rgba(124, 58, 237, .38);
+            transition: transform .15s, box-shadow .2s;
+        }
+
+        .nav-pill:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 38px rgba(139, 92, 246, .55);
+        }
+
+        .desktop-only { display: block; }
+        .mobile-only { display: none; }
+
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--line);
+            color: #fff;
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            cursor: pointer;
+            z-index: 1001;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .menu-toggle:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: var(--v2);
+        }
+
+        /* Hero */
+        #hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 55% 45%;
+            align-items: center;
+            padding-top: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hbg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .hbg-o {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            pointer-events: none;
+        }
+
+        .hbg-o1 {
+            width: 750px;
+            height: 750px;
+            top: -220px;
+            right: -80px;
+            background: radial-gradient(circle, rgba(124, 58, 237, .2), transparent 70%);
+            animation: hoa 15s ease-in-out infinite alternate;
+        }
+
+        .hbg-o2 {
+            width: 550px;
+            height: 550px;
+            bottom: -160px;
+            left: -100px;
+            background: radial-gradient(circle, rgba(6, 182, 212, .12), transparent 70%);
+            animation: hob 11s ease-in-out infinite alternate;
+        }
+
+        .hbg-o3 {
+            width: 400px;
+            height: 400px;
+            top: 35%;
+            left: 38%;
+            background: radial-gradient(circle, rgba(244, 63, 94, .09), transparent 70%);
+            animation: hoc 9s ease-in-out infinite alternate;
+        }
+
+        @keyframes hoa {
+            from {
+                transform: translate(0, 0);
+            }
+
+            to {
+                transform: translate(-50px, 40px);
+            }
+        }
+
+        @keyframes hob {
+            from {
+                transform: translate(0, 0);
+            }
+
+            to {
+                transform: translate(40px, -50px);
+            }
+        }
+
+        @keyframes hoc {
+            from {
+                transform: translate(0, 0);
+            }
+
+            to {
+                transform: translate(-25px, 25px);
+            }
+        }
+
+        .hbg-grid {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            background-image: repeating-linear-gradient(90deg, rgba(255, 255, 255, .022) 0, rgba(255, 255, 255, .022) 1px, transparent 1px, transparent 8%),
+                repeating-linear-gradient(0deg, rgba(255, 255, 255, .012) 0, rgba(255, 255, 255, .012) 1px, transparent 1px, transparent 12%);
+        }
+
+        /* New Glowing Swirls Background */
+        .hbg-swirl {
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            top: -25%;
+            left: -25%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(124, 58, 237, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(244, 63, 94, 0.1) 0%, transparent 50%);
+            filter: blur(60px);
+            animation: swirl 20s infinite linear;
+            pointer-events: none;
+        }
+
+        @keyframes swirl {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .hbg-trail {
+            position: absolute;
+            background: linear-gradient(90deg, transparent, var(--v2), transparent);
+            height: 1px;
+            width: 300px;
+            opacity: 0.2;
+            filter: blur(2px);
+            pointer-events: none;
+        }
+
+        .ht1 { top: 20%; left: -10%; transform: rotate(15deg); animation: htm 8s infinite linear; }
+        .ht2 { top: 60%; right: -10%; transform: rotate(-25deg); animation: htm 12s infinite linear reverse; }
+        .ht3 { top: 40%; left: 50%; transform: rotate(45deg); animation: htm 10s infinite linear; }
+
+        @keyframes htm {
+            0% { transform: translateX(-100%) rotate(inherit); opacity: 0; }
+            50% { opacity: 0.3; }
+            100% { transform: translateX(200%) rotate(inherit); opacity: 0; }
+        }
+
+        .hl {
+            position: relative;
+            z-index: 2;
+            padding: 60px 48px 80px 68px;
+        }
+
+        .hl-kicker {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: var(--v2);
+            letter-spacing: .16em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .hl-kicker::before {
+            content: '';
+            width: 32px;
+            height: 1px;
+            background: var(--v);
+        }
+
+        .hl-h {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(68px, 8.5vw, 108px);
+            line-height: .93;
+            letter-spacing: 1.5px;
+            color: #fff;
+            margin-bottom: 28px;
+        }
+
+        .hl-h .outline {
+            -webkit-text-stroke: 2px var(--v2);
+            color: transparent;
+            filter: drop-shadow(0 0 60px rgba(167, 139, 250, .35));
+        }
+
+        .hl-h .w {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity .6s ease, transform .6s ease;
+        }
+
+        .hl-h .w.in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hl-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(139, 92, 246, .1);
+            border: 1px solid rgba(139, 92, 246, .22);
+            border-radius: 100px;
+            padding: 7px 18px;
+            font-size: 13px;
+            color: var(--v3);
+            margin-bottom: 18px;
+            width: fit-content;
+        }
+
+        .hl-sub {
+            font-size: 17px;
+            color: var(--text-dim);
+            line-height: 1.72;
+            max-width: 470px;
+            margin-bottom: 40px;
+        }
+
+        .hl-btns {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 48px;
+        }
+
+        .btn-main {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 15px;
+            background: linear-gradient(135deg, var(--v1), var(--v));
+            color: #fff;
+            padding: 16px 34px;
+            border-radius: 100px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            box-shadow: 0 0 30px rgba(124, 58, 237, .4);
+            transition: transform .15s, box-shadow .2s;
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .btn-main::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .12), transparent);
+            transform: translateX(-100%);
+            transition: transform .5s ease;
+        }
+
+        .btn-main:hover::after {
+            transform: translateX(100%);
+        }
+
+        .btn-main:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 50px rgba(139, 92, 246, .6);
+        }
+
+        .btn-out {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 15px;
+            background: transparent;
+            color: var(--text-main);
+            padding: 16px 26px;
+            border-radius: 100px;
+            border: 1px solid var(--line);
+            text-decoration: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: border-color .2s, color .2s;
+        }
+
+        .btn-out:hover {
+            border-color: var(--v2);
+            color: #fff;
+        }
+
+        .hl-stats {
+            display: flex;
+            gap: 30px;
+            padding-top: 30px;
+            border-top: 1px solid var(--line);
+            flex-wrap: wrap;
+        }
+
+        .stat-v {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 30px;
+            letter-spacing: .5px;
+            color: #fff;
+        }
+
+        .stat-v.hi {
+            color: var(--v2);
+        }
+
+        .stat-l {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            color: var(--txt3);
+            letter-spacing: .07em;
+            text-transform: uppercase;
+            margin-top: 3px;
+        }
+
+        .hr {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 68px 80px 0;
+            min-height: 100%;
+        }
+
+        .agent-scene {
+            width: 320px;
+            position: relative;
+            perspective: 1400px;
+        }
+
+        .acard {
+            background: rgba(14, 13, 30, .85);
+            border: 1px solid rgba(139, 92, 246, .22);
+            border-radius: 22px;
+            padding: 26px;
+            backdrop-filter: blur(40px);
+            box-shadow: 0 0 0 1px rgba(139, 92, 246, .07), 0 40px 90px rgba(0, 0, 0, .65), inset 0 1px 0 rgba(255, 255, 255, .05);
+            transform: rotateY(-18deg) rotateX(6deg);
+            transform-style: preserve-3d;
+            animation: lev 5.5s ease-in-out infinite;
+            transition: transform .5s cubic-bezier(.16, 1, .3, 1);
+        }
+
+        .acard:hover {
+            transform: rotateY(-5deg) rotateX(2deg);
+            animation-play-state: paused;
+        }
+
+        @keyframes lev {
+
+            0%,
+            100% {
+                transform: rotateY(-18deg) rotateX(6deg) translateY(0);
+            }
+
+            50% {
+                transform: rotateY(-18deg) rotateX(6deg) translateY(-15px);
+            }
+        }
+
+        .acard-shine {
+            position: absolute;
+            inset: 0;
+            border-radius: 22px;
+            pointer-events: none;
+            background: linear-gradient(135deg, rgba(139, 92, 246, .18) 0%, transparent 40%, rgba(6, 182, 212, .09) 100%);
+        }
+
+        .at {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .at-av {
+            width: 42px;
+            height: 42px;
+            border-radius: 13px;
+            background: linear-gradient(135deg, var(--v1), var(--v));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 22px rgba(124, 58, 237, .55);
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .at-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .at-st {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: var(--c);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 3px;
+        }
+
+        .st-blink {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--c);
+            animation: bl 2s infinite;
+        }
+
+        @keyframes bl {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .15;
+            }
+        }
+
+        .amsg {
+            font-size: 13px;
+            color: var(--text-dim);
+            line-height: 1.6;
+            padding: 13px;
+            background: rgba(255, 255, 255, .02);
+            border-radius: 13px;
+            border: 1px solid var(--line);
+            margin-bottom: 14px;
+        }
+
+        .amsg strong {
+            color: #fff;
+        }
+
+        .sec-p {
+            font-size: 20px;
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-bottom: 50px;
+            font-weight: 500;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid var(--line);
+            padding: 40px;
+            border-radius: 32px;
+            transition: all .4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card-p {
+            color: var(--text-mid);
+            font-size: 15px;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .atags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+
+        .atag {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            padding: 4px 11px;
+            border-radius: 20px;
+            background: rgba(139, 92, 246, .1);
+            color: var(--v3);
+            border: 1px solid rgba(139, 92, 246, .2);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .abar {
+            height: 3px;
+            background: rgba(255, 255, 255, .04);
+            border-radius: 100px;
+            overflow: hidden;
+        }
+
+        .afill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--v1), var(--c));
+            animation: af 2.8s ease-in-out infinite alternate;
+        }
+
+        @keyframes af {
+            from {
+                width: 36%;
+            }
+
+            to {
+                width: 86%;
+            }
+        }
+
+        .atyping {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            margin-top: 14px;
+            padding: 8px 10px;
+            width: fit-content;
+            background: rgba(255, 255, 255, .02);
+            border-radius: 8px;
+        }
+
+        .adot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--v2);
+            animation: td 1.4s ease-in-out infinite;
+        }
+
+        .adot:nth-child(2) {
+            animation-delay: .2s;
+        }
+
+        .adot:nth-child(3) {
+            animation-delay: .4s;
+        }
+
+        @keyframes td {
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+                opacity: .4;
+            }
+
+            30% {
+                transform: translateY(-5px);
+                opacity: 1;
+            }
+        }
+
+        .fchip {
+            position: absolute;
+            background: rgba(9, 8, 22, .92);
+            border: 1px solid var(--line2);
+            border-radius: 100px;
+            padding: 9px 15px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, .45);
+            white-space: nowrap;
+        }
+
+        .fc1 {
+            top: -24px;
+            right: -14px;
+            color: var(--a);
+            animation: fc 3.2s ease-in-out infinite;
+        }
+
+        .fc2 {
+            bottom: -18px;
+            left: -22px;
+            color: var(--c2);
+            animation: fc 3.4s 1.6s ease-in-out infinite;
+        }
+
+        @keyframes fc {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-9px);
+            }
+        }
+
+        /* Marquee */
+        #marquee {
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            background: rgba(14, 13, 30, .85);
+            padding: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #marquee::before,
+        #marquee::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 120px;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        #marquee::before {
+            left: 0;
+            background: linear-gradient(to right, var(--bg), transparent);
+        }
+
+        #marquee::after {
+            right: 0;
+            background: linear-gradient(to left, var(--bg), transparent);
+        }
+
+        .mq {
+            display: flex;
+            gap: 0;
+            align-items: stretch;
+            animation: scroll 24s linear infinite;
+            width: max-content;
+        }
+
+        .mq:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes scroll {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        .mi {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 30px;
+            border-right: 1px solid var(--line);
+            opacity: .4;
+            filter: grayscale(.6);
+            flex-shrink: 0;
+            transition: opacity .25s, filter .25s;
+        }
+
+        .mi:hover {
+            opacity: 1;
+            filter: none;
+        }
+
+        .mi-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .mi-n {
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            white-space: nowrap;
+        }
+
+        /* Sections */
+        .sec {
+            padding: 92px 68px;
+        }
+
+        .ctr {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .ey {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--v2);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ey::before {
+            content: '';
+            width: 22px;
+            height: 1px;
+            background: var(--v);
+        }
+
+        .sh {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(36px, 5vw, 58px);
+            letter-spacing: .5px;
+            color: #fff;
+            line-height: .98;
+            margin-bottom: 14px;
+        }
+
+        .sp {
+            font-size: 15px;
+            color: var(--text-dim);
+            line-height: 1.7;
+            max-width: 500px;
+        }
+
+        /* Theme band */
+        #theme {
+            background: linear-gradient(135deg, rgba(124, 58, 237, .16), rgba(6, 182, 212, .08));
+            border-top: 1px solid rgba(139, 92, 246, .16);
+            border-bottom: 1px solid rgba(139, 92, 246, .16);
+            padding: 56px 68px;
+        }
+
+        .ti {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 36px;
+            flex-wrap: wrap;
+        }
+
+        .ti-ico {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            flex-shrink: 0;
+            background: rgba(139, 92, 246, .12);
+            border: 1px solid rgba(139, 92, 246, .22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--v2);
+        }
+
+        .ti-h {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(22px, 3vw, 38px);
+            letter-spacing: .5px;
+            color: #fff;
+            line-height: 1.12;
+        }
+
+        .ti-s {
+            font-size: 13px;
+            color: var(--text-mid);
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        /* Bento */
+        .bento {
+            display: grid;
+            gap: 14px;
+            margin-top: 44px;
+        }
+
+        .b3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .b6 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .bcard {
+            background: var(--txt3);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 28px 24px;
+            transition: background .25s, border-color .2s, transform .25s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bcard::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, .45), transparent);
+            opacity: 0;
+            transition: opacity .3s;
+        }
+
+        .bcard:hover {
+            background: var(--bg);
+            border-color: rgba(139, 92, 246, .2);
+            transform: translateY(-5px);
+        }
+
+        .bcard:hover::before {
+            opacity: 1;
+        }
+
+        .bc-i {
+            width: 44px;
+            height: 44px;
+            border-radius: 13px;
+            background: rgba(139, 92, 246, .1);
+            border: 1px solid rgba(139, 92, 246, .17);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--v2);
+            margin-bottom: 16px;
+        }
+
+        .bc-t {
+            font-family: 'Outfit', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 7px;
+        }
+
+        .bc-d {
+            font-size: 13px;
+            color: var(--text-mid);
+            line-height: 1.65;
+        }
+
+        /* Weeks */
+        .wks {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-top: 44px;
+        }
+
+        .wk {
+            border-radius: 18px;
+            padding: 24px 20px;
+            border: 1px solid var(--line);
+            position: relative;
+            overflow: hidden;
+            transition: transform .25s, box-shadow .25s;
+        }
+
+        .wk::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(155deg, rgba(255, 255, 255, .03), transparent);
+            pointer-events: none;
+        }
+
+        .wk:hover {
+            transform: translateY(-5px);
+        }
+
+        .wk1 {
+            background: rgba(139, 92, 246, .09);
+            border-left: 2px solid var(--v);
+        }
+
+        .wk2 {
+            background: rgba(6, 182, 212, .07);
+            border-left: 2px solid var(--c);
+        }
+
+        .wk3 {
+            background: rgba(244, 63, 94, .06);
+            border-left: 2px solid var(--pk);
+        }
+
+        .wk4 {
+            background: rgba(245, 158, 11, .06);
+            border-left: 2px solid var(--a);
+        }
+
+        .wk-n {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .wk1 .wk-n {
+            color: var(--v);
+        }
+
+        .wk2 .wk-n {
+            color: var(--c);
+        }
+
+        .wk3 .wk-n {
+            color: var(--pk);
+        }
+
+        .wk4 .wk-n {
+            color: var(--a);
+        }
+
+        .wk-t {
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 3px;
+        }
+
+        .wk-s {
+            font-size: 12px;
+            color: var(--text-mid);
+            margin-bottom: 14px;
+        }
+
+        .wk-l {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .wk-i {
+            font-size: 12px;
+            color: var(--text-dim);
+            display: flex;
+            gap: 7px;
+            line-height: 1.5;
+        }
+
+        .wk1 .wk-i::before {
+            content: '›';
+            color: var(--v);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .wk2 .wk-i::before {
+            content: '›';
+            color: var(--c);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .wk3 .wk-i::before {
+            content: '›';
+            color: var(--pk);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .wk4 .wk-i::before {
+            content: '›';
+            color: var(--a);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* Target */
+        .tgrid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 44px;
+        }
+
+        .tcard {
+            border-radius: 22px;
+            padding: 36px;
+        }
+
+        .tado {
+            background: linear-gradient(135deg, rgba(124, 58, 237, .2), rgba(139, 92, 246, .1));
+            border: 1px solid rgba(139, 92, 246, .28);
+        }
+
+        .tpar {
+            background: rgba(255, 255, 255, .025);
+            border: 1px solid var(--line);
+        }
+
+        .tc-h {
+            font-family: 'Outfit', sans-serif;
+            font-size: 19px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tc-l {
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+        }
+
+        .tc-i {
+            display: flex;
+            align-items: flex-start;
+            gap: 11px;
+            font-size: 14px;
+            color: var(--text-dim);
+        }
+
+        .tc-ck {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            margin-top: 1px;
+        }
+
+        .tado .tc-ck {
+            background: rgba(139, 92, 246, .22);
+            color: var(--v3);
+        }
+
+        .tpar .tc-ck {
+            background: rgba(6, 182, 212, .14);
+            color: var(--c2);
+        }
+
+        /* Info strip */
+        #info {
+            background: var(--bg);
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            padding: 68px;
+        }
+
+        .igrid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0;
+            margin-top: 40px;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            overflow: hidden;
+        }
+
+        .icell {
+            padding: 26px 16px;
+            text-align: center;
+            border-right: 1px solid var(--line);
+            background: var(--txt3);
+            transition: background .2s;
+        }
+
+        .icell:last-child {
+            border-right: none;
+        }
+
+        .icell:hover {
+            background: #4a4768;
+        }
+
+        .icell-ico {
+            color: var(--v2);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .icell-l {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            color: var(--text-mid);
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .icell-v {
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.3;
+        }
+
+        .icell-v.pr {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 22px;
+            letter-spacing: .5px;
+            color: var(--v2);
+        }
+
+        .seat-strip {
+            margin-top: 18px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .seat-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 15px;
+            border: 1px solid rgba(139, 92, 246, .26);
+            border-radius: 100px;
+            background: rgba(139, 92, 246, .09);
+            color: var(--text-dim);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .seat-pill strong {
+            color: #fff;
+        }
+
+        /* Social proof */
+        #proof {
+            background: rgba(14, 13, 30, .85);
+            border-bottom: 1px solid var(--line);
+            padding: 60px 68px;
+        }
+
+        .proof-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .proof-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-top: 40px;
+        }
+
+        .quote-card {
+            background: var(--txt3);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            transition: border-color .2s;
+        }
+
+        .quote-card:hover {
+            border-color: rgba(139, 92, 246, .25);
+        }
+
+        .quote-mark {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 48px;
+            line-height: .8;
+            color: var(--v1);
+            margin-bottom: 10px;
+            opacity: .5;
+        }
+
+        .quote-text {
+            font-size: 14px;
+            color: var(--text-dim);
+            line-height: 1.65;
+            margin-bottom: 16px;
+            font-style: italic;
+        }
+
+        .quote-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .qa-av {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .qa-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .qa-role {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: var(--text-mid);
+        }
+
+        /* Payment */
+        #pay {
+            background: var(--bg);
+        }
+
+        .paylayout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 56px;
+            margin-top: 44px;
+            align-items: start;
+        }
+
+        .pcwrap {
+            perspective: 1000px;
+            margin-bottom: 20px;
+        }
+
+        .pc {
+            background: linear-gradient(145deg, #180e38, #0d1828, #1c0b36);
+            border-radius: 20px;
+            padding: 30px 28px;
+            border: 1px solid rgba(255, 255, 255, .07);
+            transform: rotateY(-7deg) rotateX(3.5deg);
+            box-shadow: 0 32px 72px rgba(0, 0, 0, .55), inset 0 1px 0 rgba(255, 255, 255, .06);
+            animation: pcfloat 6.5s ease-in-out infinite;
+            transition: transform .4s;
+        }
+
+        .pc:hover {
+            transform: rotateY(-2deg) rotateX(1deg);
+        }
+
+        @keyframes pcfloat {
+
+            0%,
+            100% {
+                transform: rotateY(-7deg) rotateX(3.5deg) translateY(0);
+            }
+
+            50% {
+                transform: rotateY(-7deg) rotateX(3.5deg) translateY(-8px);
+            }
+        }
+
+        .pc1 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .pc-brand {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 22px;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+
+        .pc-chip {
+            width: 34px;
+            height: 26px;
+            border-radius: 4px;
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+        }
+
+        .pc-num {
+            font-family: 'DM Mono', monospace;
+            font-size: 15px;
+            letter-spacing: 3px;
+            color: rgba(255, 255, 255, .78);
+            margin-bottom: 24px;
+        }
+
+        .pc2 {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .pc-holder {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: rgba(255, 255, 255, .4);
+            letter-spacing: .06em;
+            text-transform: uppercase;
+        }
+
+        .pc-bads {
+            display: flex;
+            gap: 5px;
+        }
+
+        .pc-bad {
+            padding: 3px 8px;
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            background: rgba(255, 255, 255, .11);
+            color: rgba(255, 255, 255, .72);
+            border-radius: 4px;
+            font-weight: 600;
+            letter-spacing: .03em;
+        }
+
+        .pc-sec {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: var(--text-mid);
+            margin-top: 12px;
+        }
+
+        .pblock {
+            background: rgba(14, 13, 30, .85);
+            border: 1px solid var(--line);
+            border-radius: 13px;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 10px;
+            transition: border-color .2s;
+        }
+
+        .pblock:hover {
+            border-color: rgba(139, 92, 246, .28);
+        }
+
+        .pbi {
+            width: 40px;
+            height: 40px;
+            border-radius: 11px;
+            background: rgba(139, 92, 246, .13);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--v2);
+            flex-shrink: 0;
+        }
+
+        .pl {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: var(--text-mid);
+            letter-spacing: .04em;
+            margin-bottom: 3px;
+        }
+
+        .pv {
+            font-family: 'Outfit', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .ps2 {
+            font-size: 12px;
+            color: var(--text-mid);
+            margin-top: 2px;
+        }
+
+        .pform {
+            background: rgba(14, 13, 30, .85);
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            padding: 32px;
+        }
+
+        .pf-h {
+            font-family: 'Outfit', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .pf-s {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: var(--text-mid);
+            margin-bottom: 22px;
+        }
+
+        .mbox {
+            background: var(--txt3);
+            border: 1px solid rgba(139, 92, 246, .18);
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .ml {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: var(--text-mid);
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .mn {
+            font-family: 'DM Mono', monospace;
+            font-size: 25px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--v2);
+            margin-bottom: 14px;
+            line-height: 1;
+        }
+
+        .cbtn {
+            font-family: 'DM Mono', monospace;
+            background: transparent;
+            border: 1px solid rgba(139, 92, 246, .28);
+            color: var(--v3);
+            padding: 8px 18px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            cursor: pointer;
+            transition: background .2s, color .2s, border-color .2s;
+        }
+
+        .cbtn:hover {
+            background: var(--v1);
+            color: #fff;
+            border-color: var(--v1);
+        }
+
+        .psteps {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+            margin: 16px 0;
+        }
+
+        .pstep {
+            font-size: 13px;
+            color: var(--text-dim);
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            line-height: 1.5;
+        }
+
+        .psn {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 10px;
+            color: var(--v3);
+            border: 1px solid rgba(139, 92, 246, .28);
+            margin-top: 1px;
+        }
+
+        .sbtn {
+            font-family: 'Outfit', sans-serif;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--v1), var(--v));
+            color: #fff;
+            border: none;
+            border-radius: 100px;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 8px;
+            box-shadow: 0 0 28px rgba(124, 58, 237, .35);
+            transition: transform .15s, box-shadow .2s;
+            letter-spacing: -.2px;
+        }
+
+        .sbtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 44px rgba(139, 92, 246, .55);
+        }
+
+        .final-note {
+            background: rgba(245, 158, 11, .1);
+            border: 1px solid rgba(245, 158, 11, .28);
+            border-radius: 14px;
+            color: #fde68a;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.5;
+            margin: 14px 0 16px;
+            padding: 13px 14px;
+        }
+
+        .admin-track {
+            margin-top: 18px;
+            border-top: 1px solid var(--line);
+            padding-top: 16px;
+            text-align: left;
+        }
+
+        .admin-track summary {
+            cursor: pointer;
+            color: var(--v3);
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+        }
+
+        .admin-box {
+            margin-top: 12px;
+            background: var(--txt3);
+            border: 1px solid rgba(139, 92, 246, .18);
+            border-radius: 14px;
+            padding: 14px;
+        }
+
+        .admin-stat {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            color: var(--text-dim);
+            font-size: 13px;
+            padding: 7px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        .admin-stat:last-child {
+            border-bottom: none;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .admin-mini {
+            border: 1px solid rgba(139, 92, 246, .28);
+            background: rgba(139, 92, 246, .12);
+            color: #fff;
+            border-radius: 100px;
+            cursor: pointer;
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .04em;
+            padding: 8px 12px;
+            text-transform: uppercase;
+        }
+
+        .whatsapp-float {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            z-index: 650;
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 13px 17px;
+            border-radius: 100px;
+            background: #10b981;
+            color: #04130d;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 900;
+            box-shadow: 0 16px 38px rgba(16, 185, 129, .36);
+            transition: transform .15s, box-shadow .2s;
+        }
+
+        .whatsapp-float:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 48px rgba(16, 185, 129, .5);
+        }
+
+        /* Contact */
+        #contact {
+            background: rgba(14, 13, 30, .85);
+        }
+
+        .clayout {
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            gap: 48px;
+            margin-top: 44px;
+        }
+
+        .cinfo {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .cbl {
+            background: var(--bg);
+            border: 1px solid var(--line);
+            border-radius: 13px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: border-color .2s;
+        }
+
+        .cbl:hover {
+            border-color: rgba(139, 92, 246, .28);
+        }
+
+        .cico {
+            width: 40px;
+            height: 40px;
+            border-radius: 11px;
+            background: rgba(139, 92, 246, .11);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--v2);
+            flex-shrink: 0;
+        }
+
+        .cl {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: var(--text-mid);
+            letter-spacing: .04em;
+            margin-bottom: 3px;
+        }
+
+        .cv {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .cs {
+            font-size: 12px;
+            color: var(--text-mid);
+            margin-top: 2px;
+        }
+
+        .cform {
+            background: var(--bg);
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            padding: 32px;
+        }
+
+        .cf-h {
+            font-family: 'Outfit', sans-serif;
+            font-size: 19px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .cf-s {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: var(--text-mid);
+            margin-bottom: 22px;
+        }
+
+        .fi {
+            margin-bottom: 13px;
+        }
+
+        .fi label {
+            display: block;
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: var(--text-mid);
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .fi input,
+        .fi select,
+        .fi textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--line2);
+            border-radius: 11px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            color: #fff;
+            background: var(--txt3);
+            outline: none;
+            transition: border-color .2s, background .2s;
+        }
+
+        .fi input::placeholder,
+        .fi textarea::placeholder {
+            color: var(--text-mid);
+        }
+
+        .fi select option {
+            background: var(--txt3);
+        }
+
+        .fi input:focus,
+        .fi select:focus,
+        .fi textarea:focus {
+            border-color: var(--v);
+            background: rgba(139, 92, 246, .04);
+        }
+
+        .fi textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .frow {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .fsbtn {
+            font-family: 'Outfit', sans-serif;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--v1), var(--v));
+            color: #fff;
+            border: none;
+            border-radius: 100px;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 6px;
+            box-shadow: 0 0 22px rgba(124, 58, 237, .32);
+            transition: transform .15s, box-shadow .2s;
+        }
+
+        .fsbtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 38px rgba(139, 92, 246, .5);
+        }
+
+        .fok {
+            display: none;
+            text-align: center;
+            padding: 24px 12px;
+        }
+
+        .fok-ico {
+            color: var(--g);
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .fok-h {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px;
+            letter-spacing: 1px;
+            color: var(--v2);
+            margin-bottom: 6px;
+        }
+
+        footer {
+            background: var(--bg);
+            border-top: 1px solid var(--line);
+            padding: 36px 68px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .fl {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 22px;
+            letter-spacing: 2px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .fd {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--v);
+        }
+
+        .ft {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: var(--text-mid);
+            letter-spacing: .06em;
+        }
+
+        .flinks {
+            display: flex;
+            gap: 20px;
+        }
+
+        .flinks a {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            color: var(--text-mid);
+            text-decoration: none;
+            transition: color .2s;
+        }
+
+        .flinks a:hover {
+            color: #fff;
+        }
+
+        .fc {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: var(--text-mid);
+        }
+
+        .rv {
+            opacity: 0;
+            transform: translateY(32px);
+            transition: opacity .72s ease, transform .72s ease;
+        }
+
+        .rv.in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .rv-l {
+            transition-delay: .1s;
+        }
+
+        .rv-r {
+            transition-delay: .2s;
+        }
+
+        @media (pointer: fine) {
+            body {
+                cursor: none;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: .01ms !important;
+            }
+
+            body {
+                cursor: auto;
+            }
+
+            #cur-dot,
+            #cur-ring {
+                display: none;
+            }
+        }
+
+        @media(max-width:980px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            nav {
+                padding: 0 20px;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 100%;
+                height: 100vh;
+                background: rgba(5, 4, 12, 0.98);
+                backdrop-filter: blur(32px);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 40px;
+                transition: right 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+                z-index: 1000;
+                padding: 40px;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                font-size: 24px;
+                color: #fff;
+            }
+
+            .nav-links a::after {
+                width: 8px;
+                height: 8px;
+            }
+
+            .nav-pill {
+                display: none;
+            }
+
+            .desktop-only { display: none !important; }
+            .mobile-only { display: block !important; }
+
+            #hero {
+                grid-template-columns: 1fr;
+                padding-top: 70px;
+                text-align: center;
+            }
+
+            .hr {
+                display: flex;
+                padding: 40px 20px;
+                justify-content: center;
+                min-height: auto;
+            }
+
+            .agent-scene {
+                width: 280px;
+                transform: scale(0.9);
+            }
+
+            .hl {
+                padding: 40px 20px 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .hl-kicker {
+                justify-content: center;
+            }
+
+            .hl-btns {
+                justify-content: center;
+            }
+
+            .hl-stats {
+                justify-content: center;
+            }
+
+            .sec {
+                padding: 60px 20px;
+            }
+
+            #theme {
+                padding: 44px 20px;
+            }
+
+            #info {
+                padding: 52px 20px;
+            }
+
+            #proof {
+                padding: 52px 20px;
+            }
+
+            .wks,
+            .b3,
+            .b6,
+            .tgrid,
+            .paylayout,
+            .clayout {
+                grid-template-columns: 1fr;
+            }
+
+            .igrid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .proof-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .whatsapp-float {
+                right: 14px;
+                bottom: 14px;
+                padding: 12px 14px;
+                font-size: 13px;
+            }
+
+            footer {
+                flex-direction: column;
+                text-align: center;
+                padding: 28px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="cur-dot"></div>
+    <div id="cur-ring"></div>
+    <div id="progress-bar"></div>
+    <a class="whatsapp-float" href="https://wa.me/2290159037159?text=Bonjour%2C%20je%20souhaite%20avoir%20des%20informations%20sur%20GenIA%202026."
+        target="_blank" rel="noopener noreferrer" aria-label="Contacter GenIA sur WhatsApp">
+        <i data-lucide="message-circle" style="width:18px;height:18px"></i>WhatsApp
+    </a>
+
+    <nav id="nav">
+        <a href="#hero" class="nav-logo"><span class="nav-pip"></span>GenIA</a>
+        <div class="nav-links" id="nav-links">
+            <a href="#programme">Programme</a>
+            <a href="#projets">Projets</a>
+            <a href="#pay">Paiement</a>
+            <a href="#contact">Contact</a>
+            <a href="#pay" class="nav-pill mobile-only" style="margin-top: 20px;">S'inscrire — 5 000 F</a>
+        </div>
+        <a href="#pay" class="nav-pill desktop-only">S'inscrire — 5 000 F</a>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+    </nav>
+
+    <section id="hero">
+        <div class="hbg">
+            <div class="hbg-o hbg-o1"></div>
+            <div class="hbg-o hbg-o2"></div>
+            <div class="hbg-o hbg-o3"></div>
+            <div class="hbg-swirl"></div>
+            <div class="hbg-trail ht1"></div>
+            <div class="hbg-trail ht2"></div>
+            <div class="hbg-trail ht3"></div>
+            <div class="hbg-grid"></div>
+        </div>
+        <div class="hl rv">
+            <div class="hl-kicker">29 Juin — 24 Juillet 2026 · Yénawa, Bénin</div>
+            <h1 class="hl-h"><span class="w">La</span><br><span class="w">génération</span><br><span
+                    class="w outline">maîtrise</span><br><span class="w">l'IA</span></h1>
+            <div class="hl-chip"><i data-lucide="sparkles" style="width:14px;height:14px"></i> Toi + IA = Créateur de
+                musique, art, code & jeu</div>
+            <p class="hl-sub">La 1ʳᵉ formation IA au Bénin. Pas de théorie creuse — vous construisez de vrais agents IA,
+                de A à Z, en 1 mois. <strong style="color:var(--v2)">Fibre optique sur place.</strong></p>
+            <div class="hl-btns">
+                <a href="#pay" class="btn-main">Réserver ma place <i data-lucide="arrow-right"
+                        style="width:16px;height:16px"></i></a>
+                <a href="#programme" class="btn-out">Voir le programme <i data-lucide="chevron-down"
+                        style="width:14px;height:14px"></i></a>
+            </div>
+            <div class="hl-stats">
+                <div>
+                    <div class="stat-v hi">30 000 F</div>
+                    <div class="stat-l">Formation complète</div>
+                </div>
+                <div>
+                    <div class="stat-v">5 000 F</div>
+                    <div class="stat-l">Inscription</div>
+                </div>
+                <div>
+                    <div class="stat-v">25 000 F</div>
+                    <div class="stat-l">Solde 1ʳᵉ séance</div>
+                </div>
+            </div>
+        </div>
+        <div class="hr rv rv-r">
+            <div class="agent-scene">
+                <div class="acard">
+                    <div class="acard-shine"></div>
+                    <div class="at">
+                        <div class="at-av"><i data-lucide="cpu" style="width:20px;height:20px"></i></div>
+                        <div>
+                            <div class="at-name">Agent GenIA</div>
+                            <div class="at-st"><span class="st-blink"></span>En exécution</div>
+                        </div>
+                    </div>
+                    <div class="amsg">Génération d'une mélodie sur le thème <strong>Yénawa</strong>…<br><strong>→
+                            Terminé en 3 secondes ✨</strong></div>
+                    <div class="atags"><span class="atag"><i data-lucide="music"
+                                style="width:11px;height:11px"></i>musique</span><span class="atag"><i
+                                data-lucide="palette" style="width:11px;height:11px"></i>art</span><span class="atag"><i
+                                data-lucide="code-2" style="width:11px;height:11px"></i>code</span><span class="atag"><i
+                                data-lucide="gamepad-2" style="width:11px;height:11px"></i>jeux</span></div>
+                    <div class="abar">
+                        <div class="afill"></div>
+                    </div>
+                    <div class="atyping">
+                        <div class="adot"></div>
+                        <div class="adot"></div>
+                        <div class="adot"></div>
+                    </div>
+                </div>
+                <div class="fchip fc1"><i data-lucide="trophy" style="width:12px;height:12px"></i>Projet réel à la clé
+                </div>
+                <div class="fchip fc2"><i data-lucide="map-pin" style="width:12px;height:12px"></i>Cité des Jeunes ·
+                    Yénawa</div>
+            </div>
+        </div>
+    </section>
+
+    <div id="marquee">
+        <div class="mq">
+            <div class="mi">
+                <div class="mi-dot" style="background:#d97706"></div>
+                <div class="mi-n">Claude</div>
+            </div>
+            <div class="mi">
+                <div class="mi-dot" style="background:#10a37f"></div>
+                <div class="mi-n">ChatGPT</div>
+            </div>
+            <div class="mi">
+                <div class="mi-dot" style="background:#4285f4"></div>
+                <div class="mi-n">Gemini</div>
+            </div>
+            <div class="mi">
+                <div class="mi-dot" style="background:#8b5cf6"></div>
+                <div class="mi-n">Llama</div>
+            </div>
+            <div class="mi">
+                <div class="mi-dot" style="background:#2dd4bf"></div>
+                <div class="mi-n">LangChain</div>
+            </div>
+            <div class="mi">
+                <div class="mi-dot" style="background:#f472b6"></div>
+                <div class="mi-n">DALL·E</div>
+            </div>
+            <div class="mi">
+                <div class="mi-dot" style="background:#fbbf24"></div>
+                <div class="mi-n">Suno</div>
+            </div>
+            <div class="mi">
+                <div class="mi-dot" style="background:#e5e7eb"></div>
+                <div class="mi-n">Mistral</div>
+            </div>
+            <div class="mi">
+                <div class="mi-dot" style="background:#60a5fa"></div>
+                <div class="mi-n">Copilot</div>
+            </div>
+            <div class="mi">
+                <div class="mi-dot" style="background:#fff"></div>
+                <div class="mi-n">Vercel AI</div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div id="theme">
+        <div class="ti rv">
+            <div class="ti-ico"><i data-lucide="sparkles" style="width:34px;height:34px"></i></div>
+            <div>
+                <div class="ey">Thème de la formation</div>
+                <div class="ti-h">Toi + IA = La Nouvelle Génération<br>de Créateurs — Musique · Art · Code · Jeu</div>
+                <div class="ti-s">Prenez de l'avance sur votre avenir. Construisez, ne subissez pas.</div>
+            </div>
+        </div>
+    </div>
+
+    <section class="sec" id="pourquoi">
+        <div class="ctr">
+            <div class="rv">
+                <div class="ey">Pourquoi GenIA ?</div>
+                <h2 class="sh">L'IA débarque au Bénin.<br>Autant la maîtriser.</h2>
+                <p class="sec-p">Pendant que d'autres la subissent, vous apprendrez à la construire et à la piloter.</p>
+            </div>
+            <div class="bento b3 rv">
+                <div class="bcard">
+                    <div class="bc-i"><i data-lucide="brain" style="width:22px;height:22px"></i></div>
+                    <div class="bc-t">Comprendre vraiment</div>
+                    <div class="bc-d">Pas juste utiliser ChatGPT. Comprendre le fonctionnement réel — tokens, mémoire,
+                        attention, limites.</div>
+                </div>
+                <div class="bcard">
+                    <div class="bc-i"><i data-lucide="wrench" style="width:22px;height:22px"></i></div>
+                    <div class="bc-t">Créer concrètement</div>
+                    <div class="bc-d">Chaque session produit un résultat tangible. En un mois, vous repartez avec un
+                        projet IA fonctionnel.</div>
+                </div>
+                <div class="bcard">
+                    <div class="bc-i"><i data-lucide="trending-up" style="width:22px;height:22px"></i></div>
+                    <div class="bc-t">Des années d'avance</div>
+                    <div class="bc-d">Les métiers de demain sont tous impactés. Commencer maintenant, c'est des années
+                        d'avance.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="sec" id="programme" style="background:var(--txt3)">
+        <div class="ctr">
+            <div class="rv">
+                <div class="ey">Le programme</div>
+                <h2 class="sh">4 semaines,<br>4 super-pouvoirs</h2>
+                <p class="sec-p">3 sessions de 3h par semaine. Atelier pratique à chaque fois. <strong
+                        style="color:var(--v2)">Ordinateur portable recommandé.</strong></p>
+            </div>
+            <div class="wks rv">
+                <div class="wk wk1">
+                    <div class="wk-n">Semaine 1</div>
+                    <div class="wk-t">Comprendre l'IA</div>
+                    <div class="wk-s">Les bases solides</div>
+                    <div class="wk-l">
+                        <div class="wk-i">Fonctionnement réel</div>
+                        <div class="wk-i">Tokens, mémoire, limites</div>
+                        <div class="wk-i">Prompt engineering</div>
+                    </div>
+                </div>
+                <div class="wk wk2">
+                    <div class="wk-n">Semaine 2</div>
+                    <div class="wk-t">Construire avec l'IA</div>
+                    <div class="wk-s">Devenir créateur</div>
+                    <div class="wk-l">
+                        <div class="wk-i">Premier chatbot</div>
+                        <div class="wk-i">Mémoire persistante</div>
+                        <div class="wk-i">Introduction aux agents</div>
+                    </div>
+                </div>
+                <div class="wk wk3">
+                    <div class="wk-n">Semaine 3</div>
+                    <div class="wk-t">Agents en action</div>
+                    <div class="wk-s">Puissance créative</div>
+                    <div class="wk-l">
+                        <div class="wk-i">Outils & function calling</div>
+                        <div class="wk-i">Musique, art, jeux</div>
+                        <div class="wk-i">Agent autonome complet</div>
+                    </div>
+                </div>
+                <div class="wk wk4">
+                    <div class="wk-n">Semaine 4</div>
+                    <div class="wk-t">Projet final</div>
+                    <div class="wk-s">Votre œuvre</div>
+                    <div class="wk-l">
+                        <div class="wk-i">Conception & build</div>
+                        <div class="wk-i">Démo live collective</div>
+                        <div class="wk-i">Certificat GenIA</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="sec" id="projets">
+        <div class="ctr">
+            <div class="rv">
+                <div class="ey">Exemples de projets</div>
+                <h2 class="sh">Des créations réelles,<br>pas des exercices</h2>
+                <p class="sec-p">À la fin du mois, chaque participant présente un projet IA concret et fonctionnel.</p>
+            </div>
+            <div class="bento b6 rv">
+                <div class="bcard">
+                    <div class="bc-i"><i data-lucide="music" style="width:22px;height:22px"></i></div>
+                    <div class="bc-t">Compositeur IA</div>
+                    <div class="bc-d">Générez de la musique à partir d'une ambiance — votre style, en secondes.</div>
+                </div>
+                <div class="bcard">
+                    <div class="bc-i"><i data-lucide="palette" style="width:22px;height:22px"></i></div>
+                    <div class="bc-t">Artiste IA</div>
+                    <div class="bc-d">Décrivez votre vision, l'IA la dessine. Portraits, affiches, illustrations.</div>
+                </div>
+                <div class="bcard">
+                    <div class="bc-i"><i data-lucide="gamepad-2" style="width:22px;height:22px"></i></div>
+                    <div class="bc-t">Jeu d'aventure IA</div>
+                    <div class="bc-d">Histoire et décors générés en temps réel. Chaque partie unique.</div>
+                </div>
+                <div class="bcard">
+                    <div class="bc-i"><i data-lucide="book-open" style="width:22px;height:22px"></i></div>
+                    <div class="bc-t">Assistant révision</div>
+                    <div class="bc-d">Un chatbot qui pose des questions sur vos cours et explique les erreurs.</div>
+                </div>
+                <div class="bcard">
+                    <div class="bc-i"><i data-lucide="search" style="width:22px;height:22px"></i></div>
+                    <div class="bc-t">Détective fake news</div>
+                    <div class="bc-d">Un agent qui vérifie une info en croisant plusieurs sources.</div>
+                </div>
+                <div class="bcard">
+                    <div class="bc-i"><i data-lucide="bot" style="width:22px;height:22px"></i></div>
+                    <div class="bc-t">Mon agent perso</div>
+                    <div class="bc-d">Votre propre assistant avec les outils que vous choisissez.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="sec" id="pourqui" style="background:rgba(14, 13, 30, .85)">
+        <div class="ctr">
+            <div class="rv">
+                <div class="ey">Pour qui ?</div>
+                <h2 class="sh">GenIA, c'est fait<br>pour vous si…</h2>
+            </div>
+            <div class="tgrid rv">
+                <div class="tcard tado">
+                    <div class="tc-h"><i data-lucide="users" style="width:20px;height:20px;color:var(--v2)"></i>Pour les
+                        apprenants</div>
+                    <div class="tc-l">
+                        <div class="tc-i"><span class="tc-ck">✓</span>À partir de 11 ans (6ᵉ)</div>
+                        <div class="tc-i"><span class="tc-ck">✓</span>Curieux de comprendre l'IA en profondeur</div>
+                        <div class="tc-i"><span class="tc-ck">✓</span>Envie de créer musique, art, jeux ou code</div>
+                        <div class="tc-i"><span class="tc-ck">✓</span>Aucune expérience préalable nécessaire</div>
+                        <div class="tc-i"><span class="tc-ck">✓</span>Un vrai projet fonctionnel à la clé</div>
+                    </div>
+                </div>
+                <div class="tcard tpar">
+                    <div class="tc-h"><i data-lucide="shield-check"
+                            style="width:20px;height:20px;color:var(--c2)"></i>Pour les parents</div>
+                    <div class="tc-l">
+                        <div class="tc-i"><span class="tc-ck">✓</span>Encadrement par un professionnel du dev</div>
+                        <div class="tc-i"><span class="tc-ck">✓</span>Contenu éthique — limites et responsabilité</div>
+                        <div class="tc-i"><span class="tc-ck">✓</span>Petits groupes, suivi personnalisé</div>
+                        <div class="tc-i"><span class="tc-ck">✓</span>Certificat de complétion GenIA remis</div>
+                        <div class="tc-i"><span class="tc-ck">✓</span>Fibre optique sur place · PC recommandé</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="info">
+        <div class="ctr">
+            <div class="rv" style="text-align:center">
+                <div class="ey" style="justify-content:center">Infos pratiques</div>
+                <h2 class="sh" style="text-align:center">Tout ce que vous<br>devez savoir</h2>
+                <div class="seat-strip">
+                    <div class="seat-pill"><i data-lucide="users" style="width:15px;height:15px"></i><strong>12 places</strong> disponibles</div>
+                    <div class="seat-pill"><i data-lucide="calendar-days" style="width:15px;height:15px"></i>Groupe de juillet 2026</div>
+                </div>
+            </div>
+            <div class="igrid rv">
+                <div class="icell">
+                    <div class="icell-ico"><i data-lucide="calendar" style="width:22px;height:22px"></i></div>
+                    <div class="icell-l">Dates</div>
+                    <div class="icell-v">29 Juin – 24 Juillet 2026</div>
+                </div>
+                <div class="icell">
+                    <div class="icell-ico"><i data-lucide="map-pin" style="width:22px;height:22px"></i></div>
+                    <div class="icell-l">Lieu</div>
+                    <div class="icell-v">Yénawa, Cité des Jeunes</div>
+                </div>
+                <div class="icell">
+                    <div class="icell-ico"><i data-lucide="zap" style="width:22px;height:22px"></i></div>
+                    <div class="icell-l">Connexion</div>
+                    <div class="icell-v">Fibre optique haut débit</div>
+                </div>
+                <div class="icell">
+                    <div class="icell-ico"><i data-lucide="laptop" style="width:22px;height:22px"></i></div>
+                    <div class="icell-l">Matériel</div>
+                    <div class="icell-v">PC recommandé</div>
+                </div>
+                <div class="icell">
+                    <div class="icell-ico"><i data-lucide="ticket" style="width:22px;height:22px"></i></div>
+                    <div class="icell-l">Inscription</div>
+                    <div class="icell-v pr">5 000 F</div>
+                </div>
+                <div class="icell">
+                    <div class="icell-ico"><i data-lucide="graduation-cap" style="width:22px;height:22px"></i></div>
+                    <div class="icell-l">Formation complète</div>
+                    <div class="icell-v pr">30 000 F</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="proof">
+        <div class="proof-inner">
+            <div class="rv">
+                <div class="ey">Ce qu'ils en disent</div>
+                <h2 class="sh">Déjà convaincus</h2>
+            </div>
+            <div class="proof-grid rv">
+                <div class="quote-card">
+                    <div class="quote-mark">"</div>
+                    <div class="quote-text">Mon fils de 13 ans a construit son premier chatbot en semaine 2. Il ne
+                        regardait plus YouTube le soir, il codait. C'est tout dire.</div>
+                    <div class="quote-author">
+                        <div class="qa-av" style="background:linear-gradient(135deg,#7c3aed,#a78bfa)">AM</div>
+                        <div>
+                            <div class="qa-name">Aminata M.</div>
+                            <div class="qa-role">Mère d'élève · Cotonou</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="quote-card">
+                    <div class="quote-mark">"</div>
+                    <div class="quote-text">Je pensais que l'IA c'était pour les adultes. Après la semaine 1 j'avais
+                        déjà compris comment ChatGPT fonctionne vraiment. Personne ne m'avait expliqué ça comme ça.
+                    </div>
+                    <div class="quote-author">
+                        <div class="qa-av" style="background:linear-gradient(135deg,#0891b2,#22d3ee)">KD</div>
+                        <div>
+                            <div class="qa-name">Koffi D.</div>
+                            <div class="qa-role">Apprenant · 14 ans</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="quote-card">
+                    <div class="quote-mark">"</div>
+                    <div class="quote-text">Le projet final de ma fille était un agent qui aide à réviser le bac. Elle
+                        l'utilise encore aujourd'hui. C'est concret, c'est utile, c'est réel.</div>
+                    <div class="quote-author">
+                        <div class="qa-av" style="background:linear-gradient(135deg,#059669,#10b981)">FT</div>
+                        <div>
+                            <div class="qa-name">Fatou T.</div>
+                            <div class="qa-role">Parente d'élève · Porto-Novo</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="sec" id="pay">
+        <div class="ctr">
+            <div class="rv">
+                <div class="ey">Paiement direct</div>
+                <h2 class="sh">Réservez votre place<br>en deux minutes</h2>
+                <p class="sec-p">Envoyez les frais par Mobile Money à mon numéro personnel. <strong
+                        style="color:var(--v2)">Formation complète : 30 000 FCFA.</strong></p>
+            </div>
+            <div class="paylayout rv">
+                <div>
+                    <div class="pcwrap">
+                        <div class="pc">
+                            <div class="pc1"><span class="pc-brand">GenIA</span>
+                                <div class="pc-chip"></div>
+                            </div>
+                            <div class="pc-num">···· ···· ···· 2026</div>
+                            <div class="pc2"><span class="pc-holder">Inscription</span>
+                                <div class="pc-bads"><span class="pc-bad">MTN</span><span class="pc-bad">Moov</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pc-sec"><i data-lucide="lock" style="width:12px;height:12px"></i>Paiement direct ·
+                            Sans intermédiaire</div>
+                    </div>
+                    <div class="pblock">
+                        <div class="pbi"><i data-lucide="phone" style="width:18px;height:18px"></i></div>
+                        <div>
+                            <div class="pl">WhatsApp</div>
+                            <div class="pv">+229 01 59 03 71 59</div>
+                        </div>
+                    </div>
+                    <div class="pblock">
+                        <div class="pbi"><i data-lucide="map-pin" style="width:18px;height:18px"></i></div>
+                        <div>
+                            <div class="pl">Adresse</div>
+                            <div class="pv">Yénawa, Auditorium Cité des Jeunes</div>
+                            <div class="ps2">Immeuble vitré — rue clinique CELESTATH</div>
+                        </div>
+                    </div>
+                    <div class="pblock" style="border-color:rgba(16,185,129,.28);background:rgba(16,185,129,.06)">
+                        <div class="pbi" style="background:rgba(16,185,129,.14);color:var(--g)"><i data-lucide="users"
+                                style="width:18px;height:18px"></i></div>
+                        <div>
+                            <div class="pl">Places restantes</div>
+                            <div class="pv">12 places disponibles</div>
+                            <div class="ps2">Groupe de juillet 2026 · petits groupes</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pform">
+                    <div id="payForm">
+                        <div class="pf-h">Inscription (5 000 F)</div>
+                        <div class="pf-s">Remplissez ce formulaire puis envoyez la capture WhatsApp</div>
+                        <div class="frow">
+                            <div class="fi"><label for="ins_prenom">Prénom *</label><input type="text" id="ins_prenom"
+                                    placeholder="Kofi" autocomplete="given-name" required></div>
+                            <div class="fi"><label for="ins_nom">Nom *</label><input type="text" id="ins_nom" placeholder="Ahode"
+                                    autocomplete="family-name" required>
+                            </div>
+                        </div>
+                        <div class="fi"><label for="ins_tel">Téléphone / WhatsApp *</label><input type="tel" id="ins_tel"
+                                placeholder="+229 XX XX XX XX" autocomplete="tel" required></div>
+                        <div class="fi"><label for="ins_age">Âge *</label><select id="ins_age" required>
+                                <option value="">Choisir…</option>
+                                <option>11</option>
+                                <option>12</option>
+                                <option>13</option>
+                                <option>14</option>
+                                <option>15+</option>
+                            </select></div>
+                        <div class="fi"><label for="ins_paiement">Option de paiement *</label><select id="ins_paiement"
+                                onchange="updatePaySteps()" required>
+                                <option value="5000">Inscription seule (5 000 F)</option>
+                                <option value="30000">Formation complète (30 000 F)</option>
+                            </select></div>
+                        <div class="mbox">
+                            <div class="ml">Numéro MoMo à utiliser</div>
+                            <div class="mn">+229 01 59 03 71 59</div>
+                            <button class="cbtn" onclick="copyMomo()"><i data-lucide="copy"
+                                    style="width:11px;height:11px;display:inline;margin-right:4px"></i>Copier le
+                                numéro</button>
+                        </div>
+                        <div class="psteps" style="margin-bottom:0;">
+                            <div class="pstep"><span class="psn">1</span>Remplissez le formulaire ci‑dessus.</div>
+                            <div class="pstep"><span class="psn">2</span>Envoyez <strong id="payAmountText">5 000
+                                    F</strong> par Mobile
+                                Money au numéro.</div>
+                            <div class="pstep"><span class="psn">3</span>Cliquez sur "Envoyer capture WhatsApp"
+                                ci‑dessous.</div>
+                        </div>
+                        <p id="payNote" style="font-size:11px; color:var(--v3); margin: 10px 0 0 5px; opacity: 0.8;">*
+                            Le solde de 25 000 F sera à payer à la première séance.</p>
+                        <button class="sbtn" onclick="submitInscription()" style="margin-top:12px;">Envoyer la capture
+                            WhatsApp →</button>
+                    </div>
+                    <div id="payOk" style="display:none;text-align:center;padding:28px 12px">
+                        <div style="display:flex;justify-content:center;margin-bottom:12px"><i
+                                data-lucide="check-circle" style="width:44px;height:44px;color:var(--g)"></i></div>
+                        <div
+                            style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;color:var(--v2);margin-bottom:8px">
+                            Demande envoyée !</div>
+                        <p style="font-size:13px;color:var(--text-dim);margin-bottom:12px">Votre code de suivi : <strong
+                                id="suiviCode" style="color:var(--v2);font-family:'DM Mono',monospace;"></strong></p>
+                        <div class="final-note">Votre inscription n'est pas encore finalisée. Envoyez maintenant le
+                            message WhatsApp avec la capture de paiement.</div>
+                        <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px">Pour finaliser, <strong>envoyez
+                                la capture d'écran de votre paiement</strong> sur WhatsApp au <strong>+229 01 59 03 71
+                                59</strong> avec ce code dans le message.</p>
+                        <a id="waLink" href="#" target="_blank" rel="noopener noreferrer" class="btn-main"
+                            style="margin-bottom:12px;display:inline-flex;justify-content:center;"><i
+                                data-lucide="message-circle" style="width:16px;height:16px"></i> Envoyer la capture
+                            WhatsApp</a>
+                        <p style="font-size:11px;color:var(--text-mid);">Après vérification, vous recevrez votre pass
+                            définitif par WhatsApp.</p>
+                    </div>
+                    <details class="admin-track">
+                        <summary>Suivi local des inscriptions</summary>
+                        <div class="admin-box">
+                            <div class="admin-stat"><span>Demandes enregistrées ici</span><strong id="adminCount">0</strong></div>
+                            <div class="admin-stat"><span>Dernier code</span><strong id="adminLastCode">Aucun</strong></div>
+                            <div class="admin-stat"><span>Dernière demande</span><strong id="adminLastDate">Aucune</strong></div>
+                            <div class="admin-actions">
+                                <button type="button" class="admin-mini" onclick="exportAdminCsv()">Exporter CSV</button>
+                                <button type="button" class="admin-mini" onclick="clearAdminTrack()">Vider</button>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="sec" id="contact">
+        <div class="ctr">
+            <div class="rv">
+                <div class="ey">Contact</div>
+                <h2 class="sh">Une question ?<br>Écrivez-nous</h2>
+                <p class="sec-p">Vous préférez être contacté avant de vous inscrire ?</p>
+            </div>
+            <div class="clayout rv">
+                <div class="cinfo">
+                    <div class="cbl">
+                        <div class="cico"><i data-lucide="phone" style="width:18px;height:18px"></i></div>
+                        <div>
+                            <div class="cl">WhatsApp</div>
+                            <div class="cv">+229 01 59 03 71 59</div>
+                        </div>
+                    </div>
+                    <div class="cbl">
+                        <div class="cico"><i data-lucide="map-pin" style="width:18px;height:18px"></i></div>
+                        <div>
+                            <div class="cl">Adresse</div>
+                            <div class="cv">Yénawa, Auditorium Cité des Jeunes</div>
+                            <div class="cs">Immeuble vitré — rue clinique CELESTATH</div>
+                        </div>
+                    </div>
+                    <div class="cbl">
+                        <div class="cico"><i data-lucide="calendar" style="width:18px;height:18px"></i></div>
+                        <div>
+                            <div class="cl">Rythme</div>
+                            <div class="cv">Lun · Mer · Ven · 3h/session</div>
+                            <div class="cs">29 Juin – 24 Juillet 2026</div>
+                        </div>
+                    </div>
+                    <div class="cbl" style="border-color:rgba(139,92,246,.28);background:rgba(139,92,246,.05)">
+                        <div class="cico" style="background:rgba(139,92,246,.18)"><i data-lucide="banknote"
+                                style="width:18px;height:18px"></i></div>
+                        <div>
+                            <div class="cl">Tarifs</div>
+                            <div class="cv">5 000 F inscription · 25 000 F solde</div>
+                            <div class="cs" style="color:var(--v2);font-weight:600">Total formation : 30 000 FCFA</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cform">
+                    <div id="fC">
+                        <div class="cf-h">Demande de renseignements</div>
+                        <div class="cf-s">On vous recontacte sous 48h</div>
+                        <div class="frow">
+                            <div class="fi"><label for="prenom">Prénom *</label><input type="text" id="prenom" placeholder="Kofi"
+                                    autocomplete="given-name" required>
+                            </div>
+                            <div class="fi"><label for="nom">Nom *</label><input type="text" id="nom" placeholder="Ahode"
+                                    autocomplete="family-name" required></div>
+                        </div>
+                        <div class="fi"><label for="age">Âge *</label><select id="age" required>
+                                <option value="">Choisir…</option>
+                                <option>11</option>
+                                <option>12</option>
+                                <option>13</option>
+                                <option>14</option>
+                                <option>15+</option>
+                            </select></div>
+                        <div class="fi"><label for="tel">Téléphone / WhatsApp *</label><input type="tel" id="tel"
+                                placeholder="+229 XX XX XX XX" autocomplete="tel" required></div>
+                        <div class="fi"><label for="msg">Message</label><textarea id="msg"
+                                placeholder="Votre question ou message (optionnel)"></textarea></div>
+                        <button class="fsbtn" onclick="sendForm()">Envoyer la demande →</button>
+                    </div>
+                    <div class="fok" id="fOK">
+                        <div class="fok-ico"><i data-lucide="check-circle" style="width:44px;height:44px"></i></div>
+                        <div class="fok-h">Demande envoyée !</div>
+                        <p style="font-size:13px;color:var(--text-dim)">On vous recontacte sous 48h sur WhatsApp.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="sec" style="background: var(--bg); border-top: 1px solid var(--line);">
+        <div class="ctr">
+            <div class="rv" style="text-align: center; margin-bottom: 60px;">
+                <div class="ey" style="justify-content: center;">FAQ Rapide</div>
+                <h2 class="sh">Transparence des tarifs</h2>
+            </div>
+            <div class="bento b2 rv">
+                <div class="bcard">
+                    <h3 style="color:var(--v2); font-size:16px; margin-bottom:12px;">Pourquoi deux tarifs ?</h3>
+                    <p class="bc-d">Les <strong>5 000 FCFA</strong> servent à l'inscription pour réserver officiellement votre place (limitée). Les <strong>25 000 FCFA</strong> restants sont à régler au début des cours pour couvrir tout le mois de formation.</p>
+                </div>
+                <div class="bcard">
+                    <h3 style="color:var(--v2); font-size:16px; margin-bottom:12px;">Y a-t-il des frais cachés ?</h3>
+                    <p class="bc-d"><strong>Aucun.</strong> Le montant total de 30 000 FCFA (5k + 25k) couvre l'intégralité des 4 semaines, le matériel pédagogique numérique et le certificat final.</p>
+                </div>
+                <div class="bcard">
+                    <h3 style="color:var(--v2); font-size:16px; margin-bottom:12px;">Ordinateur obligatoire ?</h3>
+                    <p class="bc-d">C'est <strong>fortement recommandé</strong> pour que l'élève puisse continuer ses projets à la maison. Si vous n'en avez pas, contactez-nous rapidement pour trouver une solution.</p>
+                </div>
+                <div class="bcard">
+                    <h3 style="color:var(--v2); font-size:16px; margin-bottom:12px;">Comment payer ?</h3>
+                    <p class="bc-d">Le paiement se fait par <strong>Mobile Money (Moov ou MTN)</strong>. Une fois inscrit, vous recevez les instructions par WhatsApp pour sécuriser votre place.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div>
+            <div class="fl"><span class="fd"></span>GenIA</div>
+            <div class="ft">La génération qui maîtrise l'IA</div>
+        </div>
+        <div class="flinks"><a href="#programme">Programme</a><a href="#projets">Projets</a><a
+                href="#pay">Paiement</a><a href="#contact">Contact</a></div>
+        <div class="fc">+229 01 59 03 71 59 · © 2026 GenIA — Yénawa, Bénin</div>
+    </footer>
+
+    <script>
+        function initL(cb) {
+            if (typeof lucide !== 'undefined') { lucide.createIcons(); if (cb) cb(); } else setTimeout(() =>
+                initL(cb), 40);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initL();
+            const bar = document.getElementById('progress-bar');
+            window.addEventListener('scroll', () => {
+                bar.style.width = (scrollY / (document.body.scrollHeight -
+                    window.innerHeight) * 100) + '%';
+            }, { passive: true });
+
+            const dot = document.getElementById('cur-dot');
+            const ring = document.getElementById('cur-ring');
+            let mx = 0,
+                my = 0,
+                rx = 0,
+                ry = 0;
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            document.addEventListener('mousemove', e => {
+                mx = e.clientX;
+                my = e.clientY;
+                dot.style.left = mx + 'px';
+                dot.style.top = my + 'px';
+            });
+            (function frame() {
+                if (reduceMotion) return;
+                rx += (mx - rx) * .15;
+                ry += (my - ry) * .15;
+                ring.style.left = rx + 'px';
+                ring.style.top = ry + 'px';
+                requestAnimationFrame(frame);
+            })();
+            document.addEventListener('mousedown', () => {
+                dot.style.transform = 'translate(-5%, -5%) rotate(-15deg) scale(0.8)';
+                ring.style.transform = 'translate(-50%, -50%) scale(0.8)';
+            });
+            document.addEventListener('mouseup', () => {
+                dot.style.transform = 'translate(-5%, -5%) rotate(-15deg) scale(1)';
+                ring.style.transform = 'translate(-50%, -50%) scale(1)';
+            });
+            document.addEventListener('click', e => {
+                const r = document.createElement('div');
+                r.className = 'cur-ripple';
+                r.style.left = e.clientX + 'px';
+                r.style.top = e.clientY + 'px';
+                document.body.appendChild(r);
+                r.addEventListener('animationend', () => r.remove());
+            });
+            document.querySelectorAll('a,button,.bcard,.wk,.tcard,.icell,.cbl,.pblock,.quote-card').forEach(el => {
+                el
+                    .addEventListener('mouseenter', () => {
+                        dot.style.opacity = '.3';
+                        ring.classList.add('hov');
+                    });
+                el.addEventListener('mouseleave', () => {
+                    dot.style.opacity = '1';
+                    ring.classList.remove('hov');
+                });
+            });
+            window.addEventListener('scroll', () => {
+                document.getElementById('nav').classList.toggle('scrolled',
+                    scrollY > 50);
+            }, { passive: true });
+            document.querySelectorAll('.hl-h .w').forEach((w, i) => {
+                setTimeout(() => w.classList.add('in'), 300 + i *
+                    120);
+            });
+            const obs = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) e.target
+                        .classList.add('in');
+                });
+            }, { threshold: .07 });
+            document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+            document.querySelectorAll('a[href^="#"]').forEach(a => {
+                a.addEventListener('click', e => {
+                    const href = a.getAttribute('href');
+                    if (!href || href === '#' || !href.startsWith('#')) return;
+                    const t = document.querySelector(href); if (t) {
+                            e.preventDefault();
+                            t.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
+                    }
+                });
+            });
+            updateAdminTrack();
+        });
+
+        const ADMIN_TRACK_KEY = 'genia_inscriptions_2026';
+
+        function getAdminTrack() {
+            try {
+                return JSON.parse(localStorage.getItem(ADMIN_TRACK_KEY) || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function setAdminTrack(items) {
+            try {
+                localStorage.setItem(ADMIN_TRACK_KEY, JSON.stringify(items));
+            } catch (e) { }
+        }
+
+        function saveAdminEntry(entry) {
+            const items = getAdminTrack();
+            items.unshift(entry);
+            setAdminTrack(items);
+            updateAdminTrack();
+        }
+
+        function updateAdminTrack() {
+            const items = getAdminTrack();
+            const count = document.getElementById('adminCount');
+            const lastCode = document.getElementById('adminLastCode');
+            const lastDate = document.getElementById('adminLastDate');
+            if (!count || !lastCode || !lastDate) return;
+            const latest = items[0];
+            count.textContent = items.length;
+            lastCode.textContent = latest ? latest.suivi : 'Aucun';
+            lastDate.textContent = latest ? new Date(latest.createdAt).toLocaleString('fr-FR') : 'Aucune';
+        }
+
+        function exportAdminCsv() {
+            const items = getAdminTrack();
+            if (!items.length) { alert('Aucune inscription enregistrée sur ce navigateur.'); return; }
+            const headers = ['date', 'code', 'prenom', 'nom', 'telephone', 'age', 'paiement'];
+            const rows = items.map(item => headers.map(key => `"${String(item[key] || '').replace(/"/g, '""')}"`).join(','));
+            const blob = new Blob([[headers.join(','), ...rows].join('\n')], { type: 'text/csv;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'genia-inscriptions-2026.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function clearAdminTrack() {
+            if (!confirm('Vider le suivi local des inscriptions sur ce navigateur ?')) return;
+            setAdminTrack([]);
+            updateAdminTrack();
+        }
+
+        function genSuivi() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let code = 'GEN-'; for (let i = 0; i < 4; i++)
+                code += chars[Math.floor(Math.random() * chars.length)]; return code;
+        }
+
+        function updatePaySteps() {
+            const val = document.getElementById('ins_paiement').value;
+            const text = document.getElementById('payAmountText');
+            const note = document.getElementById('payNote');
+            if (val === '30000') {
+                text.textContent = '30 000 F';
+                note.style.display = 'none';
+            } else {
+                text.textContent = '5 000 F';
+                note.style.display = 'block';
+            }
+        }
+
+        function submitInscription() {
+            const prenom = document.getElementById('ins_prenom').value.trim();
+            const nom = document.getElementById('ins_nom').value.trim();
+            const tel = document.getElementById('ins_tel').value.trim();
+            const age = document.getElementById('ins_age').value;
+            const paiement = document.getElementById('ins_paiement').value;
+            const typePaiement = paiement === '30000' ? 'Formation complète (30 000 F)' : 'Inscription seule (5 000 F)';
+
+            if (!prenom || !nom || !tel || !age) { alert('Veuillez remplir tous les champs.'); return; }
+            const suivi = genSuivi();
+            document.getElementById('suiviCode').textContent = suivi;
+            saveAdminEntry({
+                createdAt: new Date().toISOString(),
+                date: new Date().toLocaleString('fr-FR'),
+                suivi,
+                prenom,
+                nom,
+                telephone: tel,
+                age,
+                paiement: typePaiement
+            });
+
+            let msg = `Bonjour, je confirme mon inscription GenIA.\n\nPrénom : ${prenom}\nNom : ${nom}\nTéléphone : ${tel}\nÂge : ${age}\nOption : ${typePaiement}\nCode de suivi : ${suivi}\n\nVeuillez trouver la capture de paiement ci-jointe.`;
+            if (paiement === '5000') {
+                msg += `\n\n(Note : Je réglerai les 25 000 F restants à la première séance.)`;
+            }
+
+            document.getElementById('waLink').href =
+                `https://wa.me/2290159037159?text=${encodeURIComponent(msg)}`;
+            document.getElementById('payForm').style.display = 'none';
+            document.getElementById('payOk').style.display = 'block';
+            window.open(document.getElementById('waLink').href, '_blank');
+            lucide.createIcons();
+        }
+
+        function copyMomo() {
+            navigator.clipboard.writeText('+229 01 59 03 71 59').then(() => {
+                const b = document
+                    .querySelector('.cbtn');
+                b.innerHTML = '✓ Copié !'; setTimeout(() => {
+                    b.innerHTML =
+                        '<i data-lucide="copy" style="width:11px;height:11px;display:inline;margin-right:4px"></i>Copier le numéro';
+                    lucide.createIcons();
+                }, 2000);
+            });
+        }
+
+        async function sendForm() {
+            const p = document.getElementById('prenom').value.trim();
+            const n = document.getElementById('nom').value.trim();
+            const t = document.getElementById('tel').value.trim();
+            const a = document.getElementById('age').value;
+            const m = document.getElementById('msg').value.trim();
+
+            if (!p || !n || !t || !a) {
+                alert('Veuillez remplir les champs obligatoires.');
+                return;
+            }
+
+            const btn = document.querySelector('.fsbtn');
+            btn.textContent = 'Ouverture WhatsApp…';
+
+            const fullMsg = `Bonjour, je souhaite avoir des renseignements sur GenIA.\n\nPrénom : ${p}\nNom : ${n}\nÂge : ${a}\nTéléphone : ${t}\nMessage : ${m || 'Pas de message supplémentaire.'}`;
+            const waUrl = `https://wa.me/2290159037159?text=${encodeURIComponent(fullMsg)}`;
+
+            const formspreeEndpoint = '';
+            if (formspreeEndpoint) {
+                try {
+                    fetch(formspreeEndpoint, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ prenom: p, nom: n, telephone: t, age: a, message: m })
+                    });
+                } catch (e) { }
+            }
+
+            window.open(waUrl, '_blank');
+
+            document.getElementById('fC').style.display = 'none';
+            document.getElementById('fOK').style.display = 'block';
+            lucide.createIcons();
+        }
+
+        // Mobile Menu Logic
+        const menuToggle = document.getElementById('menu-toggle');
+        const navLinks = document.getElementById('nav-links');
+        const links = document.querySelectorAll('.nav-links a');
+
+        if (menuToggle && navLinks) {
+            menuToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                const icon = menuToggle.querySelector('i');
+                if (navLinks.classList.contains('active')) {
+                    icon.setAttribute('data-lucide', 'x');
+                } else {
+                    icon.setAttribute('data-lucide', 'menu');
+                }
+                lucide.createIcons();
+            });
+
+            links.forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    const icon = menuToggle.querySelector('i');
+                    icon.setAttribute('data-lucide', 'menu');
+                    lucide.createIcons();
+                });
+            });
+        }
+    </script>
+</body>
+
+</html>
