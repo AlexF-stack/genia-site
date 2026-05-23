@@ -1770,66 +1770,6 @@
             margin: 14px 0 16px;
             padding: 13px 14px;
         }
-
-        .admin-track {
-            margin-top: 18px;
-            border-top: 1px solid var(--line);
-            padding-top: 16px;
-            text-align: left;
-        }
-
-        .admin-track summary {
-            cursor: pointer;
-            color: var(--v3);
-            font-family: 'DM Mono', monospace;
-            font-size: 11px;
-            letter-spacing: .04em;
-            text-transform: uppercase;
-        }
-
-        .admin-box {
-            margin-top: 12px;
-            background: var(--txt3);
-            border: 1px solid rgba(139, 92, 246, .18);
-            border-radius: 14px;
-            padding: 14px;
-        }
-
-        .admin-stat {
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            color: var(--text-dim);
-            font-size: 13px;
-            padding: 7px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, .08);
-        }
-
-        .admin-stat:last-child {
-            border-bottom: none;
-        }
-
-        .admin-actions {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 12px;
-        }
-
-        .admin-mini {
-            border: 1px solid rgba(139, 92, 246, .28);
-            background: rgba(139, 92, 246, .12);
-            color: #fff;
-            border-radius: 100px;
-            cursor: pointer;
-            font-family: 'DM Mono', monospace;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: .04em;
-            padding: 8px 12px;
-            text-transform: uppercase;
-        }
-
         .whatsapp-float {
             position: fixed;
             right: 22px;
@@ -2599,7 +2539,7 @@
                 <div class="ey" style="justify-content:center">Infos pratiques</div>
                 <h2 class="sh" style="text-align:center">Tout ce que vous<br>devez savoir</h2>
                 <div class="seat-strip">
-                    <div class="seat-pill"><i data-lucide="users" style="width:15px;height:15px"></i><strong>12 places</strong> disponibles</div>
+                    <div class="seat-pill"><i data-lucide="users" style="width:15px;height:15px"></i><strong>Inscriptions</strong> ouvertes</div>
                     <div class="seat-pill"><i data-lucide="calendar-days" style="width:15px;height:15px"></i>Groupe de juillet 2026</div>
                 </div>
             </div>
@@ -2729,7 +2669,7 @@
                         <div class="pbi" style="background:rgba(16,185,129,.14);color:var(--g)"><i data-lucide="users"
                                 style="width:18px;height:18px"></i></div>
                         <div>
-                            <div class="pl">Places restantes</div>
+                            <div class="pl">Places disponibles</div>
                             <div class="pv">12 places disponibles</div>
                             <div class="ps2">Groupe de juillet 2026 · petits groupes</div>
                         </div>
@@ -2761,58 +2701,30 @@
                                 <option value="5000">Inscription seule (5 000 F)</option>
                                 <option value="30000">Formation complète (30 000 F)</option>
                             </select></div>
-                        <div class="mbox">
-                            <div class="ml">Numéro MoMo à utiliser</div>
-                            <div class="mn">+229 01 59 03 71 59</div>
-                            <button class="cbtn" onclick="copyMomo()"><i data-lucide="copy"
-                                    style="width:11px;height:11px;display:inline;margin-right:4px"></i>Copier le
-                                numéro</button>
-                        </div>
-                        <div class="psteps" style="margin-bottom:0;">
-                            <div class="pstep"><span class="psn">1</span>Remplissez le formulaire ci‑dessus.</div>
-                            <div class="pstep"><span class="psn">2</span>Envoyez <strong id="payAmountText">5 000
-                                    F</strong> par Mobile
-                                Money au numéro.</div>
-                            <div class="pstep"><span class="psn">3</span>Cliquez sur "Envoyer capture WhatsApp"
-                                ci‑dessous.</div>
-                        </div>
-                        <p id="payNote" style="font-size:11px; color:var(--v3); margin: 10px 0 0 5px; opacity: 0.8;">*
-                            Le solde de 25 000 F sera à payer à la première séance.</p>
-                        <button class="sbtn" onclick="submitInscription()" style="margin-top:12px;">Envoyer la capture
-                            WhatsApp →</button>
+                        <!-- Paiement sécurisé via Kkiapay -->
+                        <p class="pc-note" style="font-size:11px; color:var(--v3); margin: 10px 0 0 5px; opacity: 0.8;">
+                            Paiement sécurisé via Kkiapay. Vous recevrez votre confirmation après validation.
+                        </p>
+                        <button class="sbtn" onclick="submitInscription()" style="margin-top:12px;">Payer maintenant</button>
                     </div>
                     <div id="payOk" style="display:none;text-align:center;padding:28px 12px">
                         <div style="display:flex;justify-content:center;margin-bottom:12px"><i
                                 data-lucide="check-circle" style="width:44px;height:44px;color:var(--g)"></i></div>
                         <div
                             style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;color:var(--v2);margin-bottom:8px">
-                            Demande envoyée !</div>
+                            Paiement reçu !</div>
                         <p style="font-size:13px;color:var(--text-dim);margin-bottom:12px">Votre code de suivi : <strong
                                 id="suiviCode" style="color:var(--v2);font-family:'DM Mono',monospace;"></strong></p>
-                        <div class="final-note">Votre inscription n'est pas encore finalisée. Envoyez maintenant le
-                            message WhatsApp avec la capture de paiement.</div>
-                        <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px">Pour finaliser, <strong>envoyez
-                                la capture d'écran de votre paiement</strong> sur WhatsApp au <strong>+229 01 59 03 71
-                                59</strong> avec ce code dans le message.</p>
+                        <div class="final-note">Votre paiement a été reçu et sera validé automatiquement après confirmation KKiaPay.</div>
+                        <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px">Cliquez ci-dessous pour envoyer le récapitulatif sur WhatsApp au <strong>+229 01 59 03 71
+                                59</strong> avec ce code.</p>
                         <a id="waLink" href="#" target="_blank" rel="noopener noreferrer" class="btn-main"
                             style="margin-bottom:12px;display:inline-flex;justify-content:center;"><i
-                                data-lucide="message-circle" style="width:16px;height:16px"></i> Envoyer la capture
+                                data-lucide="message-circle" style="width:16px;height:16px"></i> Envoyer le récapitulatif
                             WhatsApp</a>
                         <p style="font-size:11px;color:var(--text-mid);">Après vérification, vous recevrez votre pass
                             définitif par WhatsApp.</p>
                     </div>
-                    <details class="admin-track">
-                        <summary>Suivi local des inscriptions</summary>
-                        <div class="admin-box">
-                            <div class="admin-stat"><span>Demandes enregistrées ici</span><strong id="adminCount">0</strong></div>
-                            <div class="admin-stat"><span>Dernier code</span><strong id="adminLastCode">Aucun</strong></div>
-                            <div class="admin-stat"><span>Dernière demande</span><strong id="adminLastDate">Aucune</strong></div>
-                            <div class="admin-actions">
-                                <button type="button" class="admin-mini" onclick="exportAdminCsv()">Exporter CSV</button>
-                                <button type="button" class="admin-mini" onclick="clearAdminTrack()">Vider</button>
-                            </div>
-                        </div>
-                    </details>
                 </div>
             </div>
         </div>
@@ -2905,7 +2817,7 @@
             <div class="bento b2 rv">
                 <div class="bcard">
                     <h3 style="color:var(--v2); font-size:16px; margin-bottom:12px;">Pourquoi deux tarifs ?</h3>
-                    <p class="bc-d">Les <strong>5 000 FCFA</strong> servent à l'inscription pour réserver officiellement votre place (limitée). Les <strong>25 000 FCFA</strong> restants sont à régler au début des cours pour couvrir tout le mois de formation.</p>
+                    <p class="bc-d">Les <strong>5 000 FCFA</strong> servent à l'inscription pour réserver officiellement votre place. Les <strong>25 000 FCFA</strong> restants sont à régler au début des cours pour couvrir tout le mois de formation.</p>
                 </div>
                 <div class="bcard">
                     <h3 style="color:var(--v2); font-size:16px; margin-bottom:12px;">Y a-t-il des frais cachés ?</h3>
@@ -2933,6 +2845,7 @@
         <div class="fc">+229 01 59 03 71 59 · © 2026 GenIA — Yénawa, Bénin</div>
     </footer>
 
+    <script src="https://cdn.kkiapay.me/k.js"></script>
     <script>
         function initL(cb) {
             if (typeof lucide !== 'undefined') { lucide.createIcons(); if (cb) cb(); } else setTimeout(() =>
@@ -3020,10 +2933,14 @@
                     }
                 });
             });
-            updateAdminTrack();
         });
 
         const ADMIN_TRACK_KEY = 'genia_inscriptions_2026';
+        const API_REGISTRATIONS_URL = '/api/registrations';
+        const KKIAPAY_PUBLIC_KEY = '7d638410552911f19fb5fb8e05220761';
+        const KKIAPAY_SANDBOX = false;
+        let pendingKkiapayEntry = null;
+        let pendingKkiapayWhatsappUrl = '';
 
         function getAdminTrack() {
             try {
@@ -3039,43 +2956,31 @@
             } catch (e) { }
         }
 
-        function saveAdminEntry(entry) {
+        function saveAdminEntryLocal(entry) {
             const items = getAdminTrack();
-            items.unshift(entry);
+            const index = items.findIndex(item => item.suivi === entry.suivi);
+            if (index >= 0) {
+                items[index] = { ...items[index], ...entry };
+            } else {
+                items.unshift(entry);
+            }
             setAdminTrack(items);
-            updateAdminTrack();
         }
 
-        function updateAdminTrack() {
-            const items = getAdminTrack();
-            const count = document.getElementById('adminCount');
-            const lastCode = document.getElementById('adminLastCode');
-            const lastDate = document.getElementById('adminLastDate');
-            if (!count || !lastCode || !lastDate) return;
-            const latest = items[0];
-            count.textContent = items.length;
-            lastCode.textContent = latest ? latest.suivi : 'Aucun';
-            lastDate.textContent = latest ? new Date(latest.createdAt).toLocaleString('fr-FR') : 'Aucune';
-        }
-
-        function exportAdminCsv() {
-            const items = getAdminTrack();
-            if (!items.length) { alert('Aucune inscription enregistrée sur ce navigateur.'); return; }
-            const headers = ['date', 'code', 'prenom', 'nom', 'telephone', 'age', 'paiement'];
-            const rows = items.map(item => headers.map(key => `"${String(item[key] || '').replace(/"/g, '""')}"`).join(','));
-            const blob = new Blob([[headers.join(','), ...rows].join('\n')], { type: 'text/csv;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'genia-inscriptions-2026.csv';
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        function clearAdminTrack() {
-            if (!confirm('Vider le suivi local des inscriptions sur ce navigateur ?')) return;
-            setAdminTrack([]);
-            updateAdminTrack();
+        async function saveAdminEntry(entry) {
+            saveAdminEntryLocal(entry);
+            try {
+                const response = await fetch(API_REGISTRATIONS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(entry)
+                });
+                if (!response.ok) throw new Error('API registration failed');
+                return true;
+            } catch (error) {
+                console.warn('Inscription gardée localement, API indisponible.', error);
+                return false;
+            }
         }
 
         function genSuivi() {
@@ -3084,16 +2989,54 @@
         }
 
         function updatePaySteps() {
-            const val = document.getElementById('ins_paiement').value;
-            const text = document.getElementById('payAmountText');
-            const note = document.getElementById('payNote');
-            if (val === '30000') {
-                text.textContent = '30 000 F';
-                note.style.display = 'none';
-            } else {
-                text.textContent = '5 000 F';
-                note.style.display = 'block';
+            return true;
+        }
+
+        function buildInscriptionMessage(prenom, nom, tel, age, typePaiement, suivi, paiement, transactionId) {
+            let msg = `Bonjour, je confirme mon inscription GenIA.\n\nPrénom : ${prenom}\nNom : ${nom}\nTéléphone : ${tel}\nÂge : ${age}\nOption : ${typePaiement}\nCode de suivi : ${suivi}`;
+            if (transactionId) {
+                msg += `\nRéférence KKiaPay : ${transactionId}`;
             }
+            if (paiement === '5000') {
+                msg += `\n\nNote : je réglerai les 25 000 F restants à la première séance.`;
+            }
+            return msg;
+        }
+
+        async function completeKkiapaySuccess(response) {
+            if (!pendingKkiapayEntry) return;
+            const transactionId = response?.transactionId || response?.transaction_id || response?.id || '';
+            const entry = {
+                ...pendingKkiapayEntry,
+                transaction_id: transactionId,
+                status: 'client_success_pending_webhook'
+            };
+            const msg = buildInscriptionMessage(
+                entry.prenom,
+                entry.nom,
+                entry.telephone,
+                entry.age,
+                entry.paiement,
+                entry.suivi,
+                entry.paiement.includes('30 000') ? '30000' : '5000',
+                transactionId
+            );
+            const waUrl = `https://wa.me/2290159037159?text=${encodeURIComponent(msg)}`;
+            await saveAdminEntry(entry);
+            document.getElementById('suiviCode').textContent = entry.suivi;
+            document.getElementById('waLink').href = waUrl;
+            document.getElementById('payForm').style.display = 'none';
+            document.getElementById('payOk').style.display = 'block';
+            window.open(waUrl, '_blank');
+            pendingKkiapayEntry = null;
+            pendingKkiapayWhatsappUrl = '';
+            lucide.createIcons();
+        }
+
+        function completeKkiapayFailure() {
+            pendingKkiapayEntry = null;
+            pendingKkiapayWhatsappUrl = '';
+            alert('Le paiement KKiaPay a échoué ou a été annulé. Veuillez réessayer.');
         }
 
         function submitInscription() {
@@ -3104,10 +3047,13 @@
             const paiement = document.getElementById('ins_paiement').value;
             const typePaiement = paiement === '30000' ? 'Formation complète (30 000 F)' : 'Inscription seule (5 000 F)';
 
-            if (!prenom || !nom || !tel || !age) { alert('Veuillez remplir tous les champs.'); return; }
+            if (!prenom || !nom || !tel || !age) {
+                alert('Veuillez remplir tous les champs.');
+                return;
+            }
+
             const suivi = genSuivi();
-            document.getElementById('suiviCode').textContent = suivi;
-            saveAdminEntry({
+            const entry = {
                 createdAt: new Date().toISOString(),
                 date: new Date().toLocaleString('fr-FR'),
                 suivi,
@@ -3115,29 +3061,40 @@
                 nom,
                 telephone: tel,
                 age,
-                paiement: typePaiement
-            });
+                paiement: typePaiement,
+                transaction_id: '',
+                status: 'pending_payment'
+            };
+            const amount = paiement === '30000' ? 30000 : 5000;
+            const msg = buildInscriptionMessage(prenom, nom, tel, age, typePaiement, suivi, paiement, '');
+            const waUrl = `https://wa.me/2290159037159?text=${encodeURIComponent(msg)}`;
 
-            let msg = `Bonjour, je confirme mon inscription GenIA.\n\nPrénom : ${prenom}\nNom : ${nom}\nTéléphone : ${tel}\nÂge : ${age}\nOption : ${typePaiement}\nCode de suivi : ${suivi}\n\nVeuillez trouver la capture de paiement ci-jointe.`;
-            if (paiement === '5000') {
-                msg += `\n\n(Note : Je réglerai les 25 000 F restants à la première séance.)`;
+            if (typeof openKkiapayWidget !== 'function') {
+                alert('KKiaPay n’est pas encore chargé. Vérifiez votre connexion internet puis réessayez.');
+                return;
             }
 
-            document.getElementById('waLink').href =
-                `https://wa.me/2290159037159?text=${encodeURIComponent(msg)}`;
-            document.getElementById('payForm').style.display = 'none';
-            document.getElementById('payOk').style.display = 'block';
-            window.open(document.getElementById('waLink').href, '_blank');
-            lucide.createIcons();
+            saveAdminEntry(entry);
+            pendingKkiapayEntry = entry;
+            pendingKkiapayWhatsappUrl = waUrl;
+            openKkiapayWidget({
+                amount,
+                key: KKIAPAY_PUBLIC_KEY,
+                sandbox: KKIAPAY_SANDBOX,
+                phone: tel,
+                name: `${prenom} ${nom}`,
+                partnerId: suivi,
+                data: JSON.stringify({ suivi, prenom, nom, age, paiement: typePaiement })
+            });
         }
 
         function copyMomo() {
             navigator.clipboard.writeText('+229 01 59 03 71 59').then(() => {
-                const b = document
-                    .querySelector('.cbtn');
-                b.innerHTML = '✓ Copié !'; setTimeout(() => {
-                    b.innerHTML =
-                        '<i data-lucide="copy" style="width:11px;height:11px;display:inline;margin-right:4px"></i>Copier le numéro';
+                const b = document.querySelector('.cbtn');
+                if (!b) return;
+                b.innerHTML = 'Copié !';
+                setTimeout(() => {
+                    b.innerHTML = '<i data-lucide="copy" style="width:11px;height:11px;display:inline;margin-right:4px"></i>Copier le numéro';
                     lucide.createIcons();
                 }, 2000);
             });
@@ -3156,30 +3113,15 @@
             }
 
             const btn = document.querySelector('.fsbtn');
-            btn.textContent = 'Ouverture WhatsApp…';
-
+            btn.textContent = 'Ouverture WhatsApp...';
             const fullMsg = `Bonjour, je souhaite avoir des renseignements sur GenIA.\n\nPrénom : ${p}\nNom : ${n}\nÂge : ${a}\nTéléphone : ${t}\nMessage : ${m || 'Pas de message supplémentaire.'}`;
             const waUrl = `https://wa.me/2290159037159?text=${encodeURIComponent(fullMsg)}`;
-
-            const formspreeEndpoint = '';
-            if (formspreeEndpoint) {
-                try {
-                    fetch(formspreeEndpoint, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ prenom: p, nom: n, telephone: t, age: a, message: m })
-                    });
-                } catch (e) { }
-            }
-
             window.open(waUrl, '_blank');
-
             document.getElementById('fC').style.display = 'none';
             document.getElementById('fOK').style.display = 'block';
             lucide.createIcons();
         }
 
-        // Mobile Menu Logic
         const menuToggle = document.getElementById('menu-toggle');
         const navLinks = document.getElementById('nav-links');
         const links = document.querySelectorAll('.nav-links a');
@@ -3188,11 +3130,7 @@
             menuToggle.addEventListener('click', () => {
                 navLinks.classList.toggle('active');
                 const icon = menuToggle.querySelector('i');
-                if (navLinks.classList.contains('active')) {
-                    icon.setAttribute('data-lucide', 'x');
-                } else {
-                    icon.setAttribute('data-lucide', 'menu');
-                }
+                icon.setAttribute('data-lucide', navLinks.classList.contains('active') ? 'x' : 'menu');
                 lucide.createIcons();
             });
 
@@ -3205,7 +3143,13 @@
                 });
             });
         }
+
+        if (typeof addSuccessListener === 'function') {
+            addSuccessListener(completeKkiapaySuccess);
+        }
+        if (typeof addFailedListener === 'function') {
+            addFailedListener(completeKkiapayFailure);
+        }
     </script>
 </body>
-
 </html>

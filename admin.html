@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>GenIA - Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --bg: #05040C;
+      --line: rgba(255,255,255,.1);
+      --line2: rgba(139,92,246,.25);
+      --text-main: #FFFFFF;
+      --text-dim: #D1D5DB;
+      --text-mid: #9CA3AF;
+      --v: #8b5cf6;
+      --v1: #7c3aed;
+      --v2: #a78bfa;
+      --v3: #c4b5fd;
+      --c: #06b6d4;
+      --c2: #22d3ee;
+      --g: #10b981;
+      --a: #f59e0b;
+      --pk: #f43f5e;
+      --txt2: #6b6882;
+      --txt3: #353250;
+      --sidebar-w: 258px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; }
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg);
+      color: var(--text-dim);
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9996;
+      opacity: .022;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+      background-size: 256px;
+    }
+
+    .bg-glow { position: fixed; pointer-events: none; border-radius: 50%; filter: blur(100px); z-index: 0; }
+    .bg-g1 { width: 600px; height: 600px; top: -180px; right: -60px; background: radial-gradient(circle, rgba(124,58,237,.13), transparent 70%); animation: ga 16s ease-in-out infinite alternate; }
+    .bg-g2 { width: 400px; height: 400px; bottom: -80px; left: 12%; background: radial-gradient(circle, rgba(6,182,212,.08), transparent 70%); animation: gb 12s ease-in-out infinite alternate; }
+    @keyframes ga { to { transform: translate(-50px,40px); } }
+    @keyframes gb { to { transform: translate(40px,-50px); } }
+
+    .sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      background: rgba(5,4,12,.96);
+      backdrop-filter: blur(32px);
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      padding: 24px 14px 20px;
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 100;
+      overflow-y: auto;
+    }
+    .sb-logo { display: flex; align-items: center; gap: 11px; padding: 0 8px; margin-bottom: 30px; }
+    .sb-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: linear-gradient(135deg,var(--v1),var(--v));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px rgba(124,58,237,.55);
+      flex-shrink: 0;
+    }
+    .sb-mark svg { width: 17px; height: 17px; stroke: #fff; }
+    .sb-text { font-family: 'Bebas Neue', sans-serif; font-size: 21px; letter-spacing: 2px; color: #fff; }
+    .sb-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 8.5px;
+      color: var(--c);
+      letter-spacing: .12em;
+      background: rgba(6,182,212,.08);
+      border: 1px solid rgba(6,182,212,.18);
+      border-radius: 20px;
+      padding: 2px 7px;
+      width: fit-content;
+    }
+    .nav { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+    .nav-group-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 8.5px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--txt3);
+      padding: 0 8px;
+      margin: 18px 0 6px;
+    }
+    .nav-item, .nav-logout {
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      padding: 9px 10px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      transition: all .22s cubic-bezier(.16,1,.3,1);
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+    .nav-item { color: var(--text-mid); position: relative; }
+    .nav-item svg, .nav-logout svg { width: 16px; height: 16px; flex-shrink: 0; opacity: .7; }
+    .nav-item:hover { color: #fff; background: rgba(139,92,246,.07); border-color: rgba(139,92,246,.1); }
+    .nav-item.active { color: #fff; background: rgba(124,58,237,.17); border-color: rgba(139,92,246,.26); box-shadow: 0 0 18px rgba(124,58,237,.1); }
+    .nav-item.active svg { opacity: 1; }
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 58%;
+      background: linear-gradient(to bottom,var(--v1),var(--v2));
+      border-radius: 0 3px 3px 0;
+    }
+    .nav-spacer { flex: 1; min-height: 16px; }
+    .nav-logout { color: rgba(244,63,94,.8); border-color: rgba(244,63,94,.14); font-weight: 600; }
+    .nav-logout:hover { background: rgba(244,63,94,.08); border-color: rgba(244,63,94,.28); color: var(--pk); }
+
+    .main-content { margin-left: var(--sidebar-w); flex: 1; min-height: 100vh; position: relative; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 36px;
+      height: 56px;
+      background: rgba(5,4,12,.78);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--line);
+    }
+    .tb-crumb { font-family: 'DM Mono', monospace; font-size: 10.5px; letter-spacing: .1em; color: var(--txt2); display: flex; align-items: center; gap: 7px; }
+    .tb-crumb span { color: var(--v2); }
+    .tb-right { display: flex; align-items: center; gap: 12px; }
+    .tb-pill {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .1em;
+      background: rgba(16,185,129,.07);
+      border: 1px solid rgba(16,185,129,.18);
+      color: var(--g);
+      border-radius: 20px;
+      padding: 4px 11px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .tb-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--g); animation: pip 2.5s infinite; }
+    @keyframes pip { 0%,100% { box-shadow: 0 0 4px var(--g); } 50% { box-shadow: 0 0 12px var(--g); } }
+    .tb-av {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: linear-gradient(135deg,var(--v1),var(--v));
+      box-shadow: 0 0 14px rgba(124,58,237,.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 12px;
+      color: #fff;
+    }
+
+    .page { padding: 36px; position: relative; z-index: 1; display: none; animation: fadein .32s ease; }
+    .page.active { display: block; }
+    @keyframes fadein { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
+    .ph { margin-bottom: 32px; }
+    .ph-kicker {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--v2);
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 10px;
+    }
+    .ph-kicker::before { content: ''; width: 22px; height: 1px; background: var(--v); }
+    .ph-title { font-family: 'Bebas Neue', sans-serif; font-size: 40px; letter-spacing: 1.5px; color: #fff; line-height: 1; margin-bottom: 6px; }
+    .ph-sub { font-size: 13.5px; color: var(--txt2); }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(195px,1fr)); gap: 14px; margin-bottom: 28px; }
+    .kpi {
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+      transition: all .32s cubic-bezier(.16,1,.3,1);
+    }
+    .kpi::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg,rgba(139,92,246,.06),transparent 60%); opacity: 0; transition: opacity .28s; }
+    .kpi:hover { border-color: rgba(139,92,246,.28); box-shadow: 0 0 26px rgba(124,58,237,.08); transform: translateY(-2px); }
+    .kpi:hover::before { opacity: 1; }
+    .kpi-ico { width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+    .kpi-ico svg { width: 17px; height: 17px; }
+    .ico-v { background: rgba(124,58,237,.17); color: var(--v2); border: 1px solid rgba(139,92,246,.2); }
+    .ico-c { background: rgba(6,182,212,.11); color: var(--c2); border: 1px solid rgba(6,182,212,.18); }
+    .ico-g { background: rgba(16,185,129,.11); color: var(--g); border: 1px solid rgba(16,185,129,.18); }
+    .ico-a { background: rgba(245,158,11,.09); color: var(--a); border: 1px solid rgba(245,158,11,.18); }
+    .kpi-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--txt2); margin-bottom: 6px; }
+    .kpi-val { font-family: 'Bebas Neue', sans-serif; font-size: 34px; letter-spacing: .5px; color: #fff; line-height: 1; }
+    .kpi-note { font-size: 11px; color: var(--txt2); margin-top: 5px; display: flex; align-items: center; gap: 4px; }
+    .kpi-note.green { color: var(--g); }
+    .kpi-note.amber { color: var(--a); }
+
+    .panel { background: rgba(255,255,255,.03); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+    .panel-head { padding: 18px 22px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .panel-title { font-weight: 700; font-size: 14px; color: #fff; }
+    .panel-body { padding: 20px 22px; }
+    .badge { display: inline-flex; align-items: center; gap: 4px; font-family: 'DM Mono', monospace; font-size: 8.5px; letter-spacing: .08em; padding: 3px 9px; border-radius: 20px; }
+    .badge-v { background: rgba(139,92,246,.1); color: var(--v2); border: 1px solid rgba(139,92,246,.2); }
+    .badge-g { background: rgba(16,185,129,.09); color: var(--g); border: 1px solid rgba(16,185,129,.18); }
+    .badge-a { background: rgba(245,158,11,.08); color: var(--a); border: 1px solid rgba(245,158,11,.18); }
+
+    .btn {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 13.5px;
+      padding: 11px 24px;
+      border-radius: 100px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: all .18s;
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+    .btn::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent); transform: translateX(-100%); transition: transform .42s; }
+    .btn:hover::after { transform: translateX(100%); }
+    .btn-main { background: linear-gradient(135deg,var(--v1),var(--v)); color: #fff; box-shadow: 0 0 22px rgba(124,58,237,.32); }
+    .btn-main:hover { transform: translateY(-2px); box-shadow: 0 0 36px rgba(139,92,246,.5); }
+    .btn-ghost { background: transparent; color: var(--text-mid); border: 1px solid var(--line); }
+    .btn-ghost:hover { border-color: rgba(139,92,246,.28); color: #fff; }
+    .btn-green { background: rgba(16,185,129,.14); color: var(--g); border: 1px solid rgba(16,185,129,.22); }
+    .btn-red { background: rgba(244,63,94,.1); color: var(--pk); border: 1px solid rgba(244,63,94,.2); }
+    .btn-sm { font-size: 12px; padding: 8px 16px; }
+
+    .tbl-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--txt2); padding: 11px 14px; text-align: left; border-bottom: 1px solid var(--line); }
+    td { padding: 13px 14px; font-size: 13px; color: var(--text-dim); border-bottom: 1px solid rgba(255,255,255,.04); }
+    tbody tr { transition: background .14s; }
+    tbody tr:hover { background: rgba(255,255,255,.02); }
+    td strong { color: #fff; font-weight: 600; }
+
+    .fg { display: flex; flex-direction: column; gap: 5px; }
+    .fg-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--txt2); }
+    .fg-input {
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 10px 13px;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      transition: border-color .18s, box-shadow .18s;
+      outline: none;
+      width: 100%;
+    }
+    .fg-input::placeholder { color: var(--txt3); }
+    .fg-input:focus { border-color: rgba(139,92,246,.48); box-shadow: 0 0 0 3px rgba(139,92,246,.07); }
+
+    .seat-bar { height: 8px; background: rgba(255,255,255,.05); border-radius: 100px; overflow: hidden; margin-top: 8px; }
+    .seat-fill { height: 100%; background: linear-gradient(90deg,var(--v1),var(--c)); border-radius: 100px; transition: width .5s; }
+    .prog-week { border-radius: 14px; padding: 20px 18px; border: 1px solid var(--line); position: relative; overflow: hidden; transition: transform .22s; }
+    .prog-week:hover { transform: translateY(-3px); }
+    .pw1 { background: rgba(139,92,246,.08); border-left: 2px solid var(--v); }
+    .pw2 { background: rgba(6,182,212,.06); border-left: 2px solid var(--c); }
+    .pw3 { background: rgba(244,63,94,.05); border-left: 2px solid var(--pk); }
+    .pw4 { background: rgba(245,158,11,.05); border-left: 2px solid var(--a); }
+    .pw-n { font-family: 'DM Mono', monospace; font-size: 8.5px; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; }
+    .pw1 .pw-n { color: var(--v); } .pw2 .pw-n { color: var(--c); } .pw3 .pw-n { color: var(--pk); } .pw4 .pw-n { color: var(--a); }
+    .pw-t { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 10px; }
+    .pw-li { font-size: 12px; color: var(--text-dim); display: flex; gap: 6px; margin-bottom: 5px; line-height: 1.5; }
+    .pw-li::before { content: '>'; font-weight: 700; flex-shrink: 0; }
+
+    .info-row { display: flex; gap: 10px; padding: 14px; background: rgba(255,255,255,.02); border: 1px solid var(--line); border-radius: 11px; align-items: center; }
+    .info-ico { width: 36px; height: 36px; border-radius: 9px; background: rgba(139,92,246,.12); border: 1px solid rgba(139,92,246,.18); display: flex; align-items: center; justify-content: center; color: var(--v2); flex-shrink: 0; }
+    .info-ico svg { width: 16px; height: 16px; }
+    .info-lbl { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .07em; color: var(--txt2); margin-bottom: 3px; }
+    .info-val { font-size: 13.5px; font-weight: 600; color: #fff; }
+    .info-sub { font-size: 11px; color: var(--txt2); margin-top: 1px; }
+
+    .modal-bg { position: fixed; inset: 0; background: rgba(5,4,12,.82); backdrop-filter: blur(8px); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity .22s; }
+    .modal-bg.open { opacity: 1; pointer-events: all; }
+    .modal { background: rgba(10,9,24,.96); border: 1px solid var(--line2); border-radius: 20px; padding: 32px; max-width: 480px; width: 100%; position: relative; animation: fadein .25s ease; }
+    .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 1px; color: #fff; margin-bottom: 6px; }
+    .modal-sub { font-size: 13px; color: var(--txt2); margin-bottom: 22px; }
+    .modal-close { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,.06); border: 1px solid var(--line); border-radius: 7px; padding: 6px; cursor: pointer; color: var(--text-mid); transition: all .15s; }
+    .modal-close:hover { background: rgba(244,63,94,.12); color: var(--pk); border-color: rgba(244,63,94,.2); }
+
+    .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: rgba(10,9,24,.95); border: 1px solid var(--line2); color: #fff; padding: 11px 22px; border-radius: 100px; font-size: 13px; font-weight: 600; z-index: 9999; animation: toastIn .25s ease; white-space: nowrap; }
+    @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(8px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .grid-1-2 { display: grid; grid-template-columns: 1fr 2fr; gap: 14px; }
+    .mt20 { margin-top: 20px; }
+    .empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 44px; gap: 10px; text-align: center; }
+    .empty-ico { width: 46px; height: 46px; border-radius: 13px; background: rgba(139,92,246,.07); border: 1px solid var(--line2); display: flex; align-items: center; justify-content: center; color: var(--v2); margin-bottom: 4px; }
+    .empty-ico svg { width: 22px; height: 22px; }
+    .empty-t { font-weight: 700; font-size: 14px; color: #fff; }
+    .empty-s { font-size: 12px; color: var(--txt2); max-width: 260px; line-height: 1.5; }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--txt3); border-radius: 10px; }
+
+    @media (max-width: 980px) {
+      :root { --sidebar-w: 78px; }
+      .sidebar { padding-inline: 10px; }
+      .sb-text, .sb-badge, .nav-group-label, .nav-item span:not(.badge), .nav-logout span { display: none; }
+      .sb-logo { justify-content: center; padding: 0; }
+      .nav-item, .nav-logout { justify-content: center; }
+      .main-content { margin-left: var(--sidebar-w); }
+      .grid-2, .grid-1-2 { grid-template-columns: 1fr; }
+      .page { padding: 24px; }
+      .topbar { padding-inline: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow bg-g1"></div>
+  <div class="bg-glow bg-g2"></div>
+
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-mark" data-lucide="layers"></div>
+      <div>
+        <div class="sb-text">GenIA</div>
+        <div class="sb-badge">ADMIN</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-group-label">Vue d'ensemble</div>
+      <div class="nav-item active" data-page="dashboard"><i data-lucide="layout-dashboard"></i><span>Tableau de bord</span></div>
+
+      <div class="nav-group-label">Formation</div>
+      <div class="nav-item" data-page="inscriptions"><i data-lucide="users"></i><span>Inscriptions</span><span class="badge badge-v" id="nav-badge-inscrits" style="margin-left:auto">0</span></div>
+      <div class="nav-item" data-page="paiements"><i data-lucide="arrow-up-down"></i><span>Paiements</span></div>
+      <div class="nav-item" data-page="programme"><i data-lucide="calendar-days"></i><span>Programme</span></div>
+
+      <div class="nav-group-label">Système</div>
+      <div class="nav-item" data-page="whatsapp"><i data-lucide="message-circle"></i><span>Centre WhatsApp</span></div>
+      <div class="nav-item" data-page="parametres"><i data-lucide="settings"></i><span>Paramètres</span></div>
+
+      <div class="nav-spacer"></div>
+      <a class="nav-logout" href="genia_site.html"><i data-lucide="log-out"></i><span>Voir la landing page</span></a>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <div class="topbar">
+      <div class="tb-crumb">GenIA <span>/</span> <span id="breadcrumb">Tableau de bord</span></div>
+      <div class="tb-right">
+        <div class="tb-pill"><div class="tb-dot"></div>Session active</div>
+        <div class="tb-av">G</div>
+      </div>
+    </div>
+
+    <div id="page-dashboard" class="page active">
+      <div class="ph">
+        <div class="ph-kicker">Vue d'ensemble</div>
+        <h1 class="ph-title">Tableau de bord</h1>
+        <p class="ph-sub">Formation GenIA 2026 - 29 Juin au 24 Juillet - Yenawa, Benin</p>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi"><div class="kpi-ico ico-v"><i data-lucide="users"></i></div><div class="kpi-label">Inscrits</div><div class="kpi-val" id="kpi-inscrits">0</div><div class="kpi-note" id="kpi-inscrits-note">- Aucune inscription</div></div>
+        <div class="kpi"><div class="kpi-ico ico-g"><i data-lucide="banknote"></i></div><div class="kpi-label">Revenus collectes</div><div class="kpi-val" id="kpi-revenus">0 F</div><div class="kpi-note" id="kpi-revenus-note">- 0 paiements</div></div>
+        <div class="kpi"><div class="kpi-ico ico-a"><i data-lucide="badge-check"></i></div><div class="kpi-label">Inscriptions</div><div class="kpi-val" id="kpi-inscriptions-status">Ouvertes</div><div class="kpi-note amber">Aucune limite de places appliquee</div></div>
+        <div class="kpi"><div class="kpi-ico ico-c"><i data-lucide="activity"></i></div><div class="kpi-label">Taux de completion</div><div class="kpi-val" id="kpi-completion">-</div><div class="kpi-note">Inscription -> Formation complete</div></div>
+      </div>
+
+      <div class="grid-1-2 mt20">
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Statut de la session</div></div>
+          <div class="panel-body" style="display:flex;flex-direction:column;gap:10px">
+            <div class="info-row"><div class="info-ico"><i data-lucide="calendar-days"></i></div><div><div class="info-lbl">Periode</div><div class="info-val">29 Juin - 24 Juillet 2026</div><div class="info-sub">Lun - Mer - Ven - 3h/session</div></div></div>
+            <div class="info-row"><div class="info-ico"><i data-lucide="map-pin"></i></div><div><div class="info-lbl">Lieu</div><div class="info-val">Auditorium Cite des Jeunes, Yenawa</div><div class="info-sub">Immeuble vitre - rue clinique CELESTATH</div></div></div>
+            <div class="info-row" style="border-color:rgba(139,92,246,.22);background:rgba(139,92,246,.04)"><div class="info-ico"><i data-lucide="banknote"></i></div><div><div class="info-lbl">Tarif</div><div class="info-val">5 000 F inscription + 25 000 F solde</div><div class="info-sub" style="color:var(--v2);font-weight:600">Total : 30 000 FCFA</div></div></div>
+            <div class="info-row" style="border-color:rgba(16,185,129,.2);background:rgba(16,185,129,.04)"><div class="info-ico" style="color:var(--g)"><i data-lucide="phone"></i></div><div><div class="info-lbl">WhatsApp</div><div class="info-val">+229 01 59 03 71 59</div></div></div>
+            <button class="btn btn-main" onclick="navigate('inscriptions')" style="margin-top:4px;justify-content:center"><i data-lucide="users"></i>Voir les inscriptions</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">Dernieres inscriptions</div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span class="badge badge-v" id="dash-count">0 inscrits</span>
+              <button class="btn btn-ghost btn-sm" onclick="exportCsv()"><i data-lucide="download"></i>CSV</button>
+            </div>
+          </div>
+          <div class="empty" id="dash-empty"><div class="empty-ico"><i data-lucide="users"></i></div><div class="empty-t">Aucune inscription</div><div class="empty-s">Les inscriptions depuis la landing page apparaissent ici en temps reel.</div></div>
+          <div class="tbl-wrap" id="dash-table" style="display:none"><table><thead><tr><th>Nom</th><th>Code</th><th>Option</th><th>Date</th><th>Actions</th></tr></thead><tbody id="dash-tbody"></tbody></table></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="page-inscriptions" class="page">
+      <div class="ph"><div class="ph-kicker">Gestion</div><h1 class="ph-title">Inscriptions</h1><p class="ph-sub">Tous les apprenants enregistres depuis la landing page</p></div>
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">Liste complete</div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <span class="badge badge-v" id="ins-total-badge">0 inscrits</span>
+            <button class="btn btn-ghost btn-sm" onclick="exportCsv()"><i data-lucide="download"></i>Exporter CSV</button>
+            <button class="btn btn-red btn-sm" onclick="clearAll()"><i data-lucide="trash-2"></i>Vider</button>
+          </div>
+        </div>
+        <div id="ins-empty" class="empty"><div class="empty-ico"><i data-lucide="users"></i></div><div class="empty-t">Aucune inscription</div><div class="empty-s">Les donnees proviennent du localStorage de la landing page.</div></div>
+        <div class="tbl-wrap" id="ins-table" style="display:none"><table><thead><tr><th>Prenom</th><th>Nom</th><th>Tel.</th><th>Age</th><th>Option</th><th>Code suivi</th><th>Statut paiement</th><th>Date</th><th>Actions</th></tr></thead><tbody id="ins-tbody"></tbody></table></div>
+      </div>
+    </div>
+
+    <div id="page-paiements" class="page">
+      <div class="ph"><div class="ph-kicker">Finances</div><h1 class="ph-title">Paiements</h1><p class="ph-sub">Suivi des paiements recus - inscriptions et formations completes</p></div>
+      <div class="kpi-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+        <div class="kpi"><div class="kpi-ico ico-g"><i data-lucide="banknote"></i></div><div class="kpi-label">Total collecte</div><div class="kpi-val" id="pay-total">0 F</div><div class="kpi-note">Inscriptions + formations completes</div></div>
+        <div class="kpi"><div class="kpi-ico ico-v"><i data-lucide="users"></i></div><div class="kpi-label">Inscriptions (5 000 F)</div><div class="kpi-val" id="pay-count-5">0</div><div class="kpi-note">paiements d'inscription</div></div>
+        <div class="kpi"><div class="kpi-ico ico-a"><i data-lucide="activity"></i></div><div class="kpi-label">Formations completes (30 000 F)</div><div class="kpi-val" id="pay-count-30">0</div><div class="kpi-note">paiements formation complete</div></div>
+      </div>
+      <div class="panel mt20">
+        <div class="panel-head"><div class="panel-title">Historique des paiements</div><span class="badge badge-v" id="pay-badge">0 transactions</span></div>
+        <div id="pay-empty" class="empty"><div class="empty-ico"><i data-lucide="arrow-up-down"></i></div><div class="empty-t">Aucun paiement</div><div class="empty-s">Les paiements KKiaPay des inscriptions s'afficheront ici.</div></div>
+        <div class="tbl-wrap" id="pay-table" style="display:none"><table><thead><tr><th>Nom</th><th>Code</th><th>Option</th><th>Montant</th><th>Ref. transaction</th><th>Date</th><th>Statut</th></tr></thead><tbody id="pay-tbody"></tbody></table></div>
+      </div>
+    </div>
+
+    <div id="page-programme" class="page">
+      <div class="ph"><div class="ph-kicker">Contenu</div><h1 class="ph-title">Programme de formation</h1><p class="ph-sub">4 semaines - 12 sessions - 3h par seance - Fibre optique sur place</p></div>
+      <div class="grid-2 mt20">
+        <div class="prog-week pw1"><div class="pw-n">Semaine 1 - 29 Juin - 4 Juil.</div><div class="pw-t">Decouverte & Fondamentaux IA</div><div class="pw-li">Comment fonctionnent ChatGPT, Gemini, Claude</div><div class="pw-li">Prompting avance - obtenir ce qu'on veut</div><div class="pw-li">Creation d'images IA</div><div class="pw-li">Projet : ton identite visuelle IA</div></div>
+        <div class="prog-week pw2"><div class="pw-n">Semaine 2 - 7 - 11 Juil.</div><div class="pw-t">Creation & Automatisation</div><div class="pw-li">IA pour la musique</div><div class="pw-li">Agents IA sans code</div><div class="pw-li">Chatbot personnalise</div><div class="pw-li">Projet : automatisation d'une tache quotidienne</div></div>
+        <div class="prog-week pw3"><div class="pw-n">Semaine 3 - 14 - 18 Juil.</div><div class="pw-t">Code & Agents IA</div><div class="pw-li">Introduction Python avec IA</div><div class="pw-li">Construire un agent IA de A a Z</div><div class="pw-li">API OpenAI & Anthropic en pratique</div><div class="pw-li">Projet : agent IA pour reviser</div></div>
+        <div class="prog-week pw4"><div class="pw-n">Semaine 4 - 21 - 24 Juil.</div><div class="pw-t">Projet Final & Presentation</div><div class="pw-li">Finalisation du projet personnel</div><div class="pw-li">Pitch de 5 min devant le groupe</div><div class="pw-li">Remise des certificats GenIA 2026</div><div class="pw-li">Portfolio & prochaines etapes</div></div>
+      </div>
+    </div>
+
+    <div id="page-whatsapp" class="page">
+      <div class="ph"><div class="ph-kicker">Communication</div><h1 class="ph-title">Centre WhatsApp</h1><p class="ph-sub">Envoyez des messages groupes ou individuels aux inscrits</p></div>
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Messages rapides</div><span class="badge badge-g">Prets a envoyer</span></div>
+          <div class="panel-body" style="display:flex;flex-direction:column;gap:10px">
+            <div class="info-row" style="display:block"><div class="info-lbl" style="color:var(--v2)">Confirmation d'inscription</div><div class="info-sub" style="font-size:12px;line-height:1.6;margin:8px 0 10px">Bonjour ! Votre inscription a la formation GenIA 2026 est confirmee. Rendez-vous le 29 juin a l'Auditorium Cite des Jeunes, Yenawa.</div><button class="btn btn-green btn-sm" onclick="openWa('Bonjour ! Votre inscription a la formation GenIA 2026 est confirmee. Rendez-vous le 29 juin a l Auditorium Cite des Jeunes, Yenawa.')"><i data-lucide="message-circle"></i>Envoyer via WhatsApp</button></div>
+            <div class="info-row" style="display:block"><div class="info-lbl" style="color:var(--a)">Rappel de solde</div><div class="info-sub" style="font-size:12px;line-height:1.6;margin:8px 0 10px">Bonjour ! Rappel : les 25 000 FCFA restants sont a regler a la premiere seance.</div><button class="btn btn-green btn-sm" onclick="openWa('Bonjour ! Rappel : les 25 000 FCFA restants pour la formation GenIA 2026 sont a regler a la premiere seance le 29 juin.')"><i data-lucide="message-circle"></i>Envoyer via WhatsApp</button></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Message personnalise</div></div>
+          <div class="panel-body">
+            <div class="fg" style="margin-bottom:12px"><div class="fg-label">Numero destinataire</div><input class="fg-input" id="wa-numero" type="tel" placeholder="+229 XX XX XX XX" value="+229 01 59 03 71 59"></div>
+            <div class="fg" style="margin-bottom:14px"><div class="fg-label">Message</div><textarea class="fg-input" id="wa-msg" rows="6" placeholder="Redigez votre message ici..." style="resize:vertical"></textarea></div>
+            <button class="btn btn-main" onclick="sendCustomWa()"><i data-lucide="message-circle"></i>Ouvrir WhatsApp</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel mt20">
+        <div class="panel-head"><div class="panel-title">Contacter un inscrit</div><span class="badge badge-v" id="wa-badge">0 inscrits</span></div>
+        <div id="wa-empty" class="empty"><div class="empty-ico"><i data-lucide="message-circle"></i></div><div class="empty-t">Aucun inscrit</div><div class="empty-s">Les numeros apparaissent des qu'une inscription est enregistree.</div></div>
+        <div class="tbl-wrap" id="wa-table" style="display:none"><table><thead><tr><th>Nom</th><th>Telephone</th><th>Option</th><th>Code</th><th>Action</th></tr></thead><tbody id="wa-tbody"></tbody></table></div>
+      </div>
+    </div>
+
+    <div id="page-parametres" class="page">
+      <div class="ph"><div class="ph-kicker">Configuration</div><h1 class="ph-title">Parametres</h1><p class="ph-sub">Informations de la formation et donnees admin</p></div>
+      <div class="grid-2">
+        <div class="panel"><div class="panel-head"><div class="panel-title">Informations de la formation</div></div><div class="panel-body" style="display:flex;flex-direction:column;gap:12px"><div class="fg"><div class="fg-label">Nom</div><input class="fg-input" value="GenIA 2026 - Formation IA au Benin" readonly></div><div class="fg"><div class="fg-label">Dates</div><input class="fg-input" value="29 Juin - 24 Juillet 2026" readonly></div><div class="fg"><div class="fg-label">Lieu</div><input class="fg-input" value="Auditorium Cite des Jeunes, Yenawa" readonly></div><div class="fg"><div class="fg-label">Contact WhatsApp</div><input class="fg-input" value="+229 01 59 03 71 59" readonly></div></div></div>
+        <div class="panel"><div class="panel-head"><div class="panel-title">Donnees locales</div></div><div class="panel-body" style="display:flex;flex-direction:column;gap:12px"><div class="info-row" style="display:block"><div class="info-lbl">Cle localStorage</div><div style="font-family:'DM Mono',monospace;font-size:13px;color:var(--v2)">genia_inscriptions_2026</div></div><div class="info-row" style="display:block"><div class="info-lbl">Inscriptions enregistrees</div><div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:#fff" id="settings-count">0</div></div><button class="btn btn-ghost" onclick="exportCsv()"><i data-lucide="download"></i>Exporter toutes les donnees</button><button class="btn btn-red" onclick="clearAll()"><i data-lucide="trash-2"></i>Vider toutes les inscriptions</button></div></div>
+      </div>
+    </div>
+  </main>
+
+  <div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
+    <div class="modal">
+      <button class="modal-close" onclick="document.getElementById('modal-bg').classList.remove('open')"><i data-lucide="x"></i></button>
+      <div class="modal-title" id="modal-title">Detail de l'inscrit</div>
+      <div class="modal-sub" id="modal-sub"></div>
+      <div id="modal-body" style="display:flex;flex-direction:column;gap:8px"></div>
+      <div style="display:flex;gap:8px;margin-top:20px" id="modal-actions"></div>
+    </div>
+  </div>
+
+  <script>
+    const KEY = 'genia_inscriptions_2026';
+    const API_REGISTRATIONS_URL = '/api/registrations';
+    let apiRegistrations = null;
+    const PAGES = {
+      dashboard: 'Tableau de bord',
+      inscriptions: 'Inscriptions',
+      paiements: 'Paiements',
+      programme: 'Programme',
+      whatsapp: 'Centre WhatsApp',
+      parametres: 'Parametres'
+    };
+
+    function getData() {
+      if (Array.isArray(apiRegistrations)) return apiRegistrations;
+      try {
+        const data = JSON.parse(localStorage.getItem(KEY) || '[]');
+        return Array.isArray(data) ? data : [];
+      } catch {
+        return [];
+      }
+    }
+
+    async function loadDataFromApi() {
+      try {
+        const response = await fetch(API_REGISTRATIONS_URL, { cache: 'no-store' });
+        if (!response.ok) throw new Error('API unavailable');
+        const data = await response.json();
+        apiRegistrations = Array.isArray(data) ? data : [];
+        localStorage.setItem(KEY, JSON.stringify(apiRegistrations));
+      } catch (error) {
+        apiRegistrations = null;
+      }
+    }
+
+    function getMontant(opt) {
+      if (!opt) return 0;
+      const value = String(opt);
+      if (value.includes('30 000') || value.includes('30000')) return 30000;
+      if (value.includes('5 000') || value.includes('5000')) return 5000;
+      return 0;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, (char) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[char]);
+    }
+
+    function normalizePhone(value) {
+      return String(value || '').replace(/\s+/g, '').replace(/^\+/, '');
+    }
+
+    function navigate(id) {
+      document.querySelectorAll('.page').forEach((page) => page.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach((item) => item.classList.remove('active'));
+      document.getElementById('page-' + id)?.classList.add('active');
+      document.querySelector(`[data-page="${id}"]`)?.classList.add('active');
+      setText('breadcrumb', PAGES[id] || id);
+      refreshAll();
+      if (window.lucide) lucide.createIcons();
+    }
+
+    document.querySelectorAll('.nav-item[data-page]').forEach((item) => {
+      item.addEventListener('click', () => navigate(item.dataset.page));
+    });
+
+    async function refreshAll() {
+      await loadDataFromApi();
+      const data = getData();
+      const inscrits = data.length;
+      const paidData = data.filter((item) => item.status === 'success');
+      const revenus = paidData.reduce((sum, item) => sum + getMontant(item.paiement), 0);
+      const count5 = paidData.filter((item) => getMontant(item.paiement) === 5000).length;
+      const count30 = paidData.filter((item) => getMontant(item.paiement) === 30000).length;
+      const completion = paidData.length > 0 ? Math.round((count30 / paidData.length) * 100) : null;
+      const plural = inscrits > 1 ? 's' : '';
+      const paidPlural = paidData.length > 1 ? 's' : '';
+
+      setText('kpi-inscrits', inscrits);
+      setText('kpi-revenus', revenus.toLocaleString('fr-FR') + ' F');
+      setText('kpi-completion', completion !== null ? completion + '%' : '-');
+      setClass('kpi-inscrits-note', inscrits === 0 ? '' : 'green');
+      setText('kpi-inscrits-note', inscrits === 0 ? '- Aucune inscription' : `${inscrits} apprenant${plural}`);
+      setText('kpi-revenus-note', `${paidData.length} paiement${paidPlural} confirmé${paidPlural}`);
+      setText('dash-count', `${inscrits} inscrit${plural}`);
+      setText('ins-total-badge', `${inscrits} inscrit${plural}`);
+      setText('nav-badge-inscrits', inscrits);
+      setText('pay-total', revenus.toLocaleString('fr-FR') + ' F');
+      setText('pay-count-5', count5);
+      setText('pay-count-30', count30);
+      setText('pay-badge', `${paidData.length} transaction${paidPlural}`);
+      setText('wa-badge', `${inscrits} inscrit${plural}`);
+      setText('pl-count-5', count5);
+      setText('pl-count-30', count30);
+      setText('settings-count', inscrits);
+
+      renderTable('dash-tbody', data.slice(0, 5), 'dash');
+      renderTable('ins-tbody', data, 'ins');
+      renderTable('pay-tbody', paidData, 'pay');
+      renderTable('wa-tbody', data, 'wa');
+      toggleEmpty('dash-empty', 'dash-table', inscrits === 0);
+      toggleEmpty('ins-empty', 'ins-table', inscrits === 0);
+      toggleEmpty('pay-empty', 'pay-table', paidData.length === 0);
+      toggleEmpty('wa-empty', 'wa-table', inscrits === 0);
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function setText(id, val) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = val;
+    }
+
+    function setClass(id, cls) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.className = 'kpi-note' + (cls ? ' ' + cls : '');
+    }
+
+    function toggleEmpty(emptyId, tableId, isEmpty) {
+      const empty = document.getElementById(emptyId);
+      const table = document.getElementById(tableId);
+      if (empty) empty.style.display = isEmpty ? 'flex' : 'none';
+      if (table) table.style.display = isEmpty ? 'none' : 'block';
+    }
+
+    function renderTable(tbodyId, data, mode) {
+      const tbody = document.getElementById(tbodyId);
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      data.forEach((item, index) => {
+        const row = document.createElement('tr');
+        const prenom = escapeHtml(item.prenom || '');
+        const nomOnly = escapeHtml(item.nom || '');
+        const nom = escapeHtml(`${item.prenom || ''} ${item.nom || ''}`.trim() || '-');
+        const opt = escapeHtml(item.paiement || '-');
+        const montant = getMontant(item.paiement);
+        const code = escapeHtml(item.suivi || item.code || '-');
+        const date = item.createdAt ? new Date(item.createdAt).toLocaleDateString('fr-FR') : escapeHtml(item.date || '-');
+        const tel = escapeHtml(item.telephone || '-');
+        const age = escapeHtml(item.age || '-');
+        const tidRaw = String(item.transaction_id || '-');
+        const tid = escapeHtml(tidRaw.length > 12 ? tidRaw.slice(0, 12) + '...' : tidRaw);
+
+        if (mode === 'dash') {
+          row.innerHTML = `<td><strong>${nom}</strong></td><td><span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--v2)">${code}</span></td><td>${badgeOpt(opt)}</td><td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--txt2)">${date}</td><td><button class="btn btn-ghost btn-sm" onclick="showDetail(${index})">Voir</button></td>`;
+        } else if (mode === 'ins') {
+          row.innerHTML = `<td><strong>${prenom || '-'}</strong></td><td>${nomOnly || '-'}</td><td style="font-family:'DM Mono',monospace;font-size:11px">${tel}</td><td>${age}</td><td>${badgeOpt(opt)}</td><td><span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--v2)">${code}</span></td><td>${paymentBadge(item)}</td><td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--txt2)">${date}</td><td style="display:flex;gap:6px;padding:10px 14px"><button class="btn btn-green btn-sm" onclick="waInscrit(${index})">WA</button><button class="btn btn-ghost btn-sm" onclick="showDetail(${index})">Detail</button></td>`;
+        } else if (mode === 'pay') {
+          row.innerHTML = `<td><strong>${nom}</strong></td><td><span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--v2)">${code}</span></td><td>${badgeOpt(opt)}</td><td style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff">${montant.toLocaleString('fr-FR')} F</td><td style="font-family:'DM Mono',monospace;font-size:10px;color:var(--txt2)">${tid}</td><td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--txt2)">${date}</td><td>${paymentBadge(item)}</td>`;
+        } else if (mode === 'wa') {
+          row.innerHTML = `<td><strong>${nom}</strong></td><td style="font-family:'DM Mono',monospace;font-size:12px">${tel}</td><td>${badgeOpt(opt)}</td><td><span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--v2)">${code}</span></td><td><button class="btn btn-green btn-sm" onclick="waInscrit(${index})"><i data-lucide="message-circle"></i>Contacter</button></td>`;
+        }
+        tbody.appendChild(row);
+      });
+    }
+
+    function badgeOpt(opt) {
+      if (!opt || opt === '-') return '<span class="badge badge-a">-</span>';
+      if (opt.includes('30 000') || opt.includes('30000')) return '<span class="badge badge-g">Formation complete</span>';
+      return '<span class="badge badge-v">Inscription</span>';
+    }
+
+    function paymentBadge(item) {
+      return item.status === 'success'
+        ? '<span class="badge badge-g">Confirme</span>'
+        : '<span class="badge badge-a">En attente</span>';
+    }
+
+    function showDetail(index) {
+      const item = getData()[index];
+      if (!item) return;
+      const nom = `${item.prenom || ''} ${item.nom || ''}`.trim() || 'Inscrit';
+      setText('modal-title', nom);
+      setText('modal-sub', `Code de suivi : ${item.suivi || item.code || '-'}`);
+      const rows = [
+        ['Prenom', item.prenom],
+        ['Nom', item.nom],
+        ['Telephone', item.telephone],
+        ['Age', item.age],
+        ['Option', item.paiement],
+        ['Statut', item.status || 'success'],
+        ['Transaction ID', item.transaction_id || '-'],
+        ['Date', item.date || item.createdAt]
+      ];
+      document.getElementById('modal-body').innerHTML = rows.map(([label, value]) => `<div style="display:flex;justify-content:space-between;gap:18px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px"><span style="color:var(--txt2);font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase">${escapeHtml(label)}</span><span style="color:#fff;font-weight:600;text-align:right">${escapeHtml(value || '-')}</span></div>`).join('');
+      document.getElementById('modal-actions').innerHTML = `<button class="btn btn-green btn-sm" onclick="waInscrit(${index})"><i data-lucide="message-circle"></i>WhatsApp</button><button class="btn btn-ghost btn-sm" onclick="document.getElementById('modal-bg').classList.remove('open')">Fermer</button>`;
+      document.getElementById('modal-bg').classList.add('open');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function closeModal(event) {
+      if (event.target === document.getElementById('modal-bg')) {
+        document.getElementById('modal-bg').classList.remove('open');
+      }
+    }
+
+    function openWa(msg) {
+      window.open('https://wa.me/2290159037159?text=' + encodeURIComponent(msg), '_blank');
+    }
+
+    function waInscrit(index) {
+      const item = getData()[index];
+      if (!item) return;
+      const num = normalizePhone(item.telephone);
+      if (!num) {
+        showToast('Aucun numero WhatsApp pour cet inscrit.');
+        return;
+      }
+      const nom = `${item.prenom || ''} ${item.nom || ''}`.trim();
+      const code = item.suivi || item.code || '-';
+      const msg = `Bonjour ${nom} ! Votre inscription GenIA 2026 (code : ${code}) a bien ete recue. Pour confirmer votre place, merci de regler les 25 000 F restants a la premiere seance le 29 juin. A bientot a Yenawa !`;
+      window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    function sendCustomWa() {
+      const tel = normalizePhone(document.getElementById('wa-numero')?.value || '');
+      const msg = document.getElementById('wa-msg')?.value || '';
+      if (!tel || !msg) {
+        showToast('Remplissez le numero et le message.');
+        return;
+      }
+      window.open(`https://wa.me/${tel}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    function exportCsv() {
+      const data = getData();
+      if (!data.length) {
+        showToast('Aucune donnee a exporter.');
+        return;
+      }
+      const headers = ['date','code','prenom','nom','telephone','age','paiement','transaction_id','status'];
+      const rows = data.map((item) => headers.map((key) => {
+        const value = key === 'code' ? (item.suivi || item.code || '') : (item[key] || '');
+        return `"${String(value).replace(/"/g,'""')}"`;
+      }).join(','));
+      const blob = new Blob([[headers.join(','), ...rows].join('\n')], { type: 'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'genia-inscriptions-2026.csv';
+      link.click();
+      URL.revokeObjectURL(url);
+      showToast('Export CSV telecharge.');
+    }
+
+    async function clearAll() {
+      if (!confirm('Supprimer toutes les inscriptions enregistrees sur ce navigateur ?')) return;
+      try {
+        const response = await fetch(API_REGISTRATIONS_URL, { method: 'DELETE' });
+        if (!response.ok) throw new Error('API delete failed');
+        apiRegistrations = [];
+      } catch (error) {
+        apiRegistrations = null;
+        showToast('API indisponible, suppression locale seulement.');
+      }
+      localStorage.removeItem(KEY);
+      refreshAll();
+      showToast('Donnees effacees.');
+    }
+
+    function showToast(msg) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = msg;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    refreshAll();
+    window.addEventListener('storage', refreshAll);
+    if (window.lucide) lucide.createIcons();
+  </script>
+</body>
+</html>

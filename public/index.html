@@ -3024,6 +3024,7 @@
         });
 
         const ADMIN_TRACK_KEY = 'genia_inscriptions_2026';
+        const API_REGISTRATIONS_URL = '/api/registrations';
 
         function getAdminTrack() {
             try {
@@ -3039,11 +3040,32 @@
             } catch (e) { }
         }
 
-        function saveAdminEntry(entry) {
+        function saveAdminEntryLocal(entry) {
             const items = getAdminTrack();
-            items.unshift(entry);
+            const index = items.findIndex(item => item.suivi === entry.suivi);
+            if (index >= 0) {
+                items[index] = { ...items[index], ...entry };
+            } else {
+                items.unshift(entry);
+            }
             setAdminTrack(items);
             updateAdminTrack();
+        }
+
+        async function saveAdminEntry(entry) {
+            saveAdminEntryLocal(entry);
+            try {
+                const response = await fetch(API_REGISTRATIONS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...entry, status: entry.status || 'pending_manual_payment' })
+                });
+                if (!response.ok) throw new Error('API registration failed');
+                return true;
+            } catch (error) {
+                console.warn('Inscription gardée localement, API indisponible.', error);
+                return false;
+            }
         }
 
         function updateAdminTrack() {
@@ -3096,7 +3118,7 @@
             }
         }
 
-        function submitInscription() {
+        async function submitInscription() {
             const prenom = document.getElementById('ins_prenom').value.trim();
             const nom = document.getElementById('ins_nom').value.trim();
             const tel = document.getElementById('ins_tel').value.trim();
@@ -3107,7 +3129,7 @@
             if (!prenom || !nom || !tel || !age) { alert('Veuillez remplir tous les champs.'); return; }
             const suivi = genSuivi();
             document.getElementById('suiviCode').textContent = suivi;
-            saveAdminEntry({
+            await saveAdminEntry({
                 createdAt: new Date().toISOString(),
                 date: new Date().toLocaleString('fr-FR'),
                 suivi,
